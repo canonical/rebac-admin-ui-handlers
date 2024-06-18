@@ -10,8 +10,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/canonical/identity-platform-admin-ui/rebac-admin-backend/v1/interfaces"
-	"github.com/canonical/identity-platform-admin-ui/rebac-admin-backend/v1/resources"
+	"github.com/canonical/rebac-admin-ui-handlers/v1/interfaces"
+	"github.com/canonical/rebac-admin-ui-handlers/v1/resources"
 )
 
 // ReBACAdminBackendParams contains references to user-defined implementation

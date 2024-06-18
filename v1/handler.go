@@ -3,7 +3,7 @@
 package v1
 
 import (
-	"github.com/canonical/identity-platform-admin-ui/rebac-admin-backend/v1/interfaces"
+	"github.com/canonical/rebac-admin-ui-handlers/v1/interfaces"
 )
 
 type handler struct {

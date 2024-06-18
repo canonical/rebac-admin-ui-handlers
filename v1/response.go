@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/canonical/identity-platform-admin-ui/rebac-admin-backend/v1/resources"
+	"github.com/canonical/rebac-admin-ui-handlers/v1/resources"
 )
 
 // writeErrorResponse writes the given err in the response with format defined

@@ -7,7 +7,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/canonical/identity-platform-admin-ui/rebac-admin-backend/v1/resources"
+	"github.com/canonical/rebac-admin-ui-handlers/v1/resources"
 )
 
 // getAuthenticationMiddleware returns a middleware function that delegates the

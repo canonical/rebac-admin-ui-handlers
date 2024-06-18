@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/canonical/identity-platform-admin-ui/rebac-admin-backend/v1/resources"
+	"github.com/canonical/rebac-admin-ui-handlers/v1/resources"
 )
 
 // errorWithStatus is an internal error representation that holds the corresponding

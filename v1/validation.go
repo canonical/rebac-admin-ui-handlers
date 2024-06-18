@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 
-	"github.com/canonical/identity-platform-admin-ui/rebac-admin-backend/v1/resources"
+	"github.com/canonical/rebac-admin-ui-handlers/v1/resources"
 )
 
 // handlerWithValidation decorates a given handler with validation logic. The

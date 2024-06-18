@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/canonical/identity-platform-admin-ui/rebac-admin-backend/v1/resources"
+	"github.com/canonical/rebac-admin-ui-handlers/v1/resources"
 )
 
 // SwaggerJson Returns the OpenAPI spec as a JSON file.

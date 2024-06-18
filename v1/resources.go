@@ -6,7 +6,7 @@ package v1
 import (
 	"net/http"
 
-	"github.com/canonical/identity-platform-admin-ui/rebac-admin-backend/v1/resources"
+	"github.com/canonical/rebac-admin-ui-handlers/v1/resources"
 )
 
 // GetResources returns the list of known resources.
