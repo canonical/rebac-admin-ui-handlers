@@ -31,6 +31,6 @@ elif ! [ -r "$OPENAPI_SPEC_FILE" ]; then
   exit 1
 fi
 
-go install github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen@latest
+go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest
 oapi-codegen -generate types,spec -package resources "$OPENAPI_SPEC_FILE" > v1/resources/generated_types.go
 oapi-codegen -generate chi-server -package resources "$OPENAPI_SPEC_FILE" > v1/resources/generated_server.go
