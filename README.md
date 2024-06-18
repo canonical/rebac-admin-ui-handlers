@@ -6,7 +6,7 @@ This package is a thin library that implements the *ReBAC Admin UI* OpenAPI [spe
 
 ## Development
 
-To setup development environment follow these steps:
+To setup your development environment run these commands:
 
 ```sh
 git clone github.com/canonical/rebac-admin-ui-handlers
@@ -16,15 +16,26 @@ cd rebac-admin-ui-handlers
 make mocks
 ```
 
-To run the unit tests or get a test coverage you can use the following Makefile targets:
+Development-related actions are done via various Makefile targets. You can always run `make help` to find out about the available commands.
+
+Below are some useful Makefile targets you can use.
+
+#### Run tests/coverage
 
 ```sh
 make test
 make test-coverage
 ```
 
+#### Pull latest OpenAPI spec
 To pull the latest stable OpenAPI spec and generate the request/response types accordingly, run:
 
 ```sh
 make pull-spec
+```
+
+#### Clean working directory
+
+```sh
+make clean
 ```
