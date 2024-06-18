@@ -33,3 +33,9 @@ test-coverage: mocks
 test: mocks
 	go test ./... $(ARGS)
 .PHONY: test
+
+# Clean working directory of generated files
+clean:
+	find . -name 'mock_*.go' -delete
+	rm coverage_source.out coverage.out test_source.json test.json
+.PHONY: clean
