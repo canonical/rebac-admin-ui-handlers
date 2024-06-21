@@ -30,16 +30,22 @@ type PaginatedResponse[T any] struct {
 
 // populateQuery populates query parameters for paginated responses based on the next page available
 // it overrides existing page or nextToken query param, without changing existing parameters in the original query
-func (p *PaginatedResponse[T]) populateQuery(q url.Values) {
+func (p *PaginatedResponse[T]) populateQuery(q url.Values) bool {
 	q.Del(pageQueryKey)
 	q.Del(nextTokenQueryKey)
 
 	key := p.nextPageKey()
 	if key == "" {
-		return
+		return false
+	}
+
+	nextPage := p.nextPage()
+	if nextPage == "" {
+		return false
 	}
 
 	q.Set(key, p.nextPage())
+	return true
 }
 
 func (p *PaginatedResponse[T]) nextPageKey() string {
@@ -77,12 +83,12 @@ func (p *PaginatedResponse[T]) hasPageNumber() bool {
 func NewResponseLinks[T any](u *url.URL, p *PaginatedResponse[T]) ResponseLinks {
 	query := u.Query()
 
-	p.populateQuery(query)
-
 	ret := ResponseLinks{}
+	if !p.populateQuery(query) {
+		return ret
+	}
 	if queryParams := strings.TrimSpace(query.Encode()); queryParams != "" {
 		ret.Next.Href = fmt.Sprintf("%s?%s", u.Path, queryParams)
 	}
-
 	return ret
 }
