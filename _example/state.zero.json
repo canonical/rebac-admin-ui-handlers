@@ -1,0 +1,215 @@
+{
+    "Groups": {},
+    "Identities": {},
+    "Roles": {},
+    "Idps": {},
+    "Group2Identity": {
+        "Tuples": []
+    },
+    "Group2Role": {
+        "Tuples": []
+    },
+    "Group2Entitlement": {
+        "Tuples": []
+    },
+    "Identity2Role": {
+        "Tuples": []
+    },
+    "Identity2Entitlement": {
+        "Tuples": []
+    },
+    "Role2Entitlement": {
+        "Tuples": []
+    },
+    "UserEntitlements": [
+        {
+            "entitlement_type": "can_verb",
+            "entity_name": "some-entity-owned-by-user",
+            "entity_type": "some-entity-type"
+        }
+    ],
+    "AvailableIdentityProviders": [
+        {
+            "id": "kratos",
+            "name": "Kratos"
+        },
+        {
+            "id": "okta",
+            "name": "Okta"
+        },
+        {
+            "id": "google",
+            "name": "Google"
+        },
+        {
+            "id": "github",
+            "name": "GitHub"
+        }
+    ],
+    "UserResources": [
+        {
+            "entity": {
+                "id": "entity-1",
+                "type": "entity-type-1"
+            },
+            "id": "resource-1",
+            "name": "",
+            "parent": {
+                "entity": {
+                    "id": "entity-0",
+                    "type": "entity-type-0"
+                },
+                "id": "resource-0",
+                "name": ""
+            }
+        }
+    ],
+    "AuthModel": "{\"schema_version\":\"1.1\",\"type_definitions\":[]}",
+    "Capabilities": [
+        {
+            "endpoint": "/swagger.json",
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "endpoint": "/capabilities",
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "endpoint": "/authentication/providers",
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "endpoint": "/authentication",
+            "methods": [
+                "GET",
+                "POST"
+            ]
+        },
+        {
+            "endpoint": "/authentication/{id}",
+            "methods": [
+                "GET",
+                "PUT",
+                "DELETE"
+            ]
+        },
+        {
+            "endpoint": "/identities",
+            "methods": [
+                "GET",
+                "POST"
+            ]
+        },
+        {
+            "endpoint": "/identities/{id}",
+            "methods": [
+                "GET",
+                "PUT",
+                "DELETE"
+            ]
+        },
+        {
+            "endpoint": "/identities/{id}/groups",
+            "methods": [
+                "GET",
+                "PATCH"
+            ]
+        },
+        {
+            "endpoint": "/identities/{id}/roles",
+            "methods": [
+                "GET",
+                "PATCH"
+            ]
+        },
+        {
+            "endpoint": "/identities/{id}/entitlements",
+            "methods": [
+                "GET",
+                "PATCH"
+            ]
+        },
+        {
+            "endpoint": "/groups",
+            "methods": [
+                "GET",
+                "POST"
+            ]
+        },
+        {
+            "endpoint": "/groups/{id}",
+            "methods": [
+                "GET",
+                "PUT",
+                "DELETE"
+            ]
+        },
+        {
+            "endpoint": "/groups/{id}/identities",
+            "methods": [
+                "GET",
+                "PATCH"
+            ]
+        },
+        {
+            "endpoint": "/groups/{id}/roles",
+            "methods": [
+                "GET",
+                "PATCH"
+            ]
+        },
+        {
+            "endpoint": "/groups/{id}/entitlements",
+            "methods": [
+                "GET",
+                "PATCH"
+            ]
+        },
+        {
+            "endpoint": "/roles",
+            "methods": [
+                "GET",
+                "POST"
+            ]
+        },
+        {
+            "endpoint": "/roles/{id}",
+            "methods": [
+                "GET",
+                "PUT",
+                "DELETE"
+            ]
+        },
+        {
+            "endpoint": "/roles/{id}/entitlements",
+            "methods": [
+                "GET",
+                "PATCH"
+            ]
+        },
+        {
+            "endpoint": "/entitlements",
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "endpoint": "/entitlements/raw",
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "endpoint": "/resources",
+            "methods": [
+                "GET"
+            ]
+        }
+    ]
+}
