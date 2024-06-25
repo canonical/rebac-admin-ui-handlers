@@ -34,3 +34,7 @@ vendor/
 
 # gomocks auto-generated
 **/mock_*.go
+
+
+# Example related files
+/_example/state.json
