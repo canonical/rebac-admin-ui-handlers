@@ -38,3 +38,4 @@ vendor/
 
 # Example related files
 /_example/state.json
+/_example/server
