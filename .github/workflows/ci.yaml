@@ -68,6 +68,10 @@ jobs:
         with:
           go-version-file: 'go.mod'
 
+      - name: Download dependencies
+        run: go get ./...
+        working-directory: _example
+
       - name: Test example implementation
         run: make test
         working-directory: _example
