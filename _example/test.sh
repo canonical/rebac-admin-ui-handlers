@@ -14,10 +14,11 @@ function onexit {
 trap onexit EXIT
 
 ## Run server in background
-go run ./cmd &
+go build -o server ./cmd
+./server &
 _PID1=$!
 echo $_PID1
-sleep 0.5 # Make sure server is up and running
+sleep 1 # Make sure server is up and running
 
 ## Reset state
 
