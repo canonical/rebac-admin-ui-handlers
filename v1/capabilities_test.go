@@ -42,10 +42,12 @@ func TestHandler_Capabilities_GetCapabilitiesSuccess(t *testing.T) {
 		},
 	}
 
-	mockReturnCapabilities := resources.PaginatedResponse[resources.Capability]{Data: mockCapabilities}
-	mockCapabilitiesService.EXPECT().ListCapabilities(gomock.Any()).Return(&mockReturnCapabilities, nil)
+	mockCapabilitiesService.EXPECT().ListCapabilities(gomock.Any()).Return(mockCapabilities, nil)
 
 	expectedResponse := resources.GetCapabilitiesResponse{
+		Meta: resources.ResponseMeta{
+			Size: len(mockCapabilities),
+		},
 		Data:   mockCapabilities,
 		Status: http.StatusOK,
 	}
