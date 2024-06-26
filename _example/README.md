@@ -252,5 +252,5 @@ mux.Handle("/rebac/", rebac.Handler(""))
 If it's done correctly, you should be able to access the HTTP endpoints via a `curl` command like this:
 
 ```sh
-curl host:port/rebac/v1/swagger.json
+curl <host>:<port>/rebac/v1/swagger.json
 ```
