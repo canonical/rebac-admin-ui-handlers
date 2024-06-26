@@ -205,7 +205,7 @@ rebac, err := v1.NewReBACAdminBackend(v1.ReBACAdminBackendParams{
 
 ### 4. Implement error response mapping (optional)
 
-Optionally, you can have your own mapping to translate `error`s into HTTP responses. Although, it's best to use the pre-defined error functions (e.g., `NewUnkownError`), but you can also have your own custom error types and return them from the `*Service` interface implementations. In this case, you need to provide an implementation for the `ErrorResponseMapper` interface which is responsible to translate a given `error` into a `Response` struct:
+Optionally, you can have your own mapping to translate `error`s into HTTP responses. Although it's best to use the pre-defined error functions (e.g., `NewUnkownError`), you can also have your own custom error types and return them from the `*Service` interface implementations. In this case, you need to provide an implementation for the `ErrorResponseMapper` interface which is responsible to translate a given `error` into a `Response` struct:
 
 ```go
 type ErrorResponseMapper interface {
