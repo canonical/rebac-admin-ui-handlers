@@ -235,7 +235,7 @@ rebac, err := v1.NewReBACAdminBackend(v1.ReBACAdminBackendParams{
 })
 ```
 
-> ❓ For an example on how to crate an instance of the library, plug in interface implementations, and register the API endpoints, check out `main.go`.
+> ❓ For an example on how to create an instance of the library, plug in interface implementations, and register the API endpoints, check out `main.go`.
 
 Then you can use the returned `rebac` struct's `Handler` method to get the HTTP handlers and register them with your HTTP `ServeMux` like this:
 
