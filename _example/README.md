@@ -215,7 +215,7 @@ type ErrorResponseMapper interface {
 }
 ```
 
-Note that, you do not need to translate all `error`s passed to the `MapError` method. If it's not something that your product service is aware of, you can just return a `nil`, and the library will do the translation for you, of course, if possible.
+Note that, you do not need to translate all `error`s passed to the `MapError` method. If it's not something that your product service is aware of, you can just return a `nil`, and the library will do the translation for you, of course, if possible. If the error is totally unknown, the library will treat it as an internal server error (i.e., HTTP 500).
 
 
 ### 5. Registering HTTP handlers
