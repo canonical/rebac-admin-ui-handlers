@@ -78,6 +78,15 @@ func NewRequestBodyValidationError(message string) error {
 	}
 }
 
+// NewInvalidRequestError returns an error instance that represents a problem with the input (e.g., when trying to add
+// an entry which already exists).
+func NewInvalidRequestError(message string) error {
+	return &errorWithStatus{
+		status:  http.StatusBadRequest,
+		message: fmt.Sprintf("invalid request: %s", message),
+	}
+}
+
 // NewUnknownError returns an error instance that represents an unknown internal error.
 func NewUnknownError(message string) error {
 	return &errorWithStatus{

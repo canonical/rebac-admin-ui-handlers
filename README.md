@@ -4,6 +4,8 @@ This package is a thin library that implements the *ReBAC Admin UI* OpenAPI [spe
 
 [openapi-spec]: https://github.com/canonical/openfga-admin-openapi-spec
 
+There is an example application of the library, under the `_example` directory, which implements an in-memory server.
+
 ## Development
 
 To setup your development environment run these commands:

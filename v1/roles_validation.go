@@ -31,7 +31,7 @@ func (v handlerWithValidation) PutRolesItem(w http.ResponseWriter, r *http.Reque
 
 // PatchRolesItemEntitlements validates request body for the PatchRolesItemEntitlements method and delegates to the underlying handler.
 func (v handlerWithValidation) PatchRolesItemEntitlements(w http.ResponseWriter, r *http.Request, id string) {
-	body := &resources.GroupEntitlementsPatchRequestBody{}
+	body := &resources.RoleEntitlementsPatchRequestBody{}
 	v.validateRequestBody(body, w, r, func(w http.ResponseWriter, r *http.Request) {
 		v.ServerInterface.PatchRolesItemEntitlements(w, r, id)
 	})
