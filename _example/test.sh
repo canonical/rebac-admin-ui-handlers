@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Copyright 2024 Canonical Ltd.
+
 set -e
 
 _host="localhost:9999"
