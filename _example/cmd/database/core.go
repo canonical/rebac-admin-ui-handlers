@@ -99,6 +99,7 @@ func (db *Database) load(filename string) error {
 	if err := json.Unmarshal(raw, &db); err != nil {
 		return fmt.Errorf("failed to unmarshal state data: %w", err)
 	}
+	db.isDirty = false
 	return nil
 }
 
