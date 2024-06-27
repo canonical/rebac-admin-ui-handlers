@@ -21,6 +21,7 @@ func (db *Database) AddIdentity(identity *resources.Identity) (*resources.Identi
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
 	db.Load()
+	defer db.Persist()
 
 	// Names should be unique.
 	_, ok := db.Identities[identity.Email]
@@ -32,7 +33,7 @@ func (db *Database) AddIdentity(identity *resources.Identity) (*resources.Identi
 	entry := *identity
 	entry.Id = &id
 	db.Identities[id] = entry
-	db.Persist()
+	db.isDirty = true
 	return &entry, nil
 }
 
@@ -56,12 +57,13 @@ func (db *Database) UpdateIdentity(ctx context.Context, identity *resources.Iden
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
 	db.Load()
+	defer db.Persist()
 
 	if _, ok := db.Identities[*identity.Id]; !ok {
 		return nil
 	}
 	db.Identities[*identity.Id] = *identity
-	db.Persist()
+	db.isDirty = true
 	return identity
 }
 
@@ -71,6 +73,7 @@ func (db *Database) DeleteIdentity(identityId string) bool {
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
 	db.Load()
+	defer db.Persist()
 
 	if _, ok := db.Identities[identityId]; !ok {
 		return false
@@ -79,7 +82,7 @@ func (db *Database) DeleteIdentity(identityId string) bool {
 	db.Group2Identity.RemoveRight(identityId)
 	db.Identity2Entitlement.RemoveLeft(identityId)
 	db.Identity2Role.RemoveLeft(identityId)
-	db.Persist()
+	db.isDirty = true
 	return true
 }
 
@@ -105,12 +108,13 @@ func (db *Database) PatchIdentityGroups(identityId string, additions, removals [
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
 	db.Load()
+	defer db.Persist()
 
 	if _, ok := db.Identities[identityId]; !ok {
 		return nil
 	}
 	result := db.Group2Identity.PatchRight(identityId, additions, removals)
-	db.Persist()
+	db.isDirty = result
 	return &result
 }
 
@@ -136,12 +140,13 @@ func (db *Database) PatchIdentityRoles(identityId string, additions, removals []
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
 	db.Load()
+	defer db.Persist()
 
 	if _, ok := db.Identities[identityId]; !ok {
 		return nil
 	}
 	result := db.Identity2Role.PatchLeft(identityId, additions, removals)
-	db.Persist()
+	db.isDirty = result
 	return &result
 }
 
@@ -167,11 +172,12 @@ func (db *Database) PatchIdentityEntitlements(identityId string, additions, remo
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
 	db.Load()
+	defer db.Persist()
 
 	if _, ok := db.Identities[identityId]; !ok {
 		return nil
 	}
 	result := db.Identity2Entitlement.PatchLeft(identityId, additions, removals)
-	db.Persist()
+	db.isDirty = result
 	return &result
 }

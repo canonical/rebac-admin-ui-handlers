@@ -21,6 +21,7 @@ func (db *Database) AddRole(role *resources.Role) (*resources.Role, error) {
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
 	db.Load()
+	defer db.Persist()
 
 	// Names should be unique.
 	_, ok := db.Roles[role.Name]
@@ -32,7 +33,7 @@ func (db *Database) AddRole(role *resources.Role) (*resources.Role, error) {
 	entry := *role
 	entry.Id = &id
 	db.Roles[id] = entry
-	db.Persist()
+	db.isDirty = true
 	return &entry, nil
 }
 
@@ -56,13 +57,14 @@ func (db *Database) UpdateRole(ctx context.Context, role *resources.Role) *resou
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
 	db.Load()
+	defer db.Persist()
 
 	if _, ok := db.Roles[*role.Id]; !ok {
 		return nil
 	}
 
 	db.Roles[*role.Id] = *role
-	db.Persist()
+	db.isDirty = true
 	return role
 }
 
@@ -72,16 +74,17 @@ func (db *Database) DeleteRole(roleId string) bool {
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
 	db.Load()
+	defer db.Persist()
 
 	if _, ok := db.Roles[roleId]; !ok {
 		return false
 	}
-	defer db.Persist()
+
 	delete(db.Roles, roleId)
 	db.Group2Role.RemoveRight(roleId)
 	db.Identity2Role.RemoveRight(roleId)
 	db.Role2Entitlement.RemoveLeft(roleId)
-	db.Persist()
+	db.isDirty = true
 	return true
 }
 
@@ -107,11 +110,12 @@ func (db *Database) PatchRoleEntitlements(roleId string, additions, removals []s
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
 	db.Load()
+	defer db.Persist()
 
 	if _, ok := db.Roles[roleId]; !ok {
 		return nil
 	}
 	result := db.Role2Entitlement.PatchLeft(roleId, additions, removals)
-	db.Persist()
+	db.isDirty = result
 	return &result
 }

@@ -21,6 +21,7 @@ func (db *Database) AddGroup(group *resources.Group) (*resources.Group, error) {
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
 	db.Load()
+	defer db.Persist()
 
 	// Names should be unique.
 	_, ok := db.Groups[group.Name]
@@ -32,7 +33,7 @@ func (db *Database) AddGroup(group *resources.Group) (*resources.Group, error) {
 	entry := *group
 	entry.Id = &id
 	db.Groups[id] = entry
-	db.Persist()
+	db.isDirty = true
 	return &entry, nil
 }
 
@@ -56,13 +57,14 @@ func (db *Database) UpdateGroup(ctx context.Context, group *resources.Group) *re
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
 	db.Load()
+	defer db.Persist()
 
 	if _, ok := db.Groups[*group.Id]; !ok {
 		return nil
 	}
 
 	db.Groups[*group.Id] = *group
-	db.Persist()
+	db.isDirty = true
 	return group
 }
 
@@ -72,16 +74,17 @@ func (db *Database) DeleteGroup(groupId string) bool {
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
 	db.Load()
+	defer db.Persist()
 
 	if _, ok := db.Groups[groupId]; !ok {
 		return false
 	}
-	defer db.Persist()
+
 	delete(db.Groups, groupId)
 	db.Group2Identity.RemoveLeft(groupId)
 	db.Group2Role.RemoveLeft(groupId)
 	db.Group2Entitlement.RemoveLeft(groupId)
-	db.Persist()
+	db.isDirty = true
 	return true
 }
 
@@ -107,12 +110,13 @@ func (db *Database) PatchGroupIdentities(groupId string, additions, removals []s
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
 	db.Load()
+	defer db.Persist()
 
 	if _, ok := db.Groups[groupId]; !ok {
 		return nil
 	}
 	result := db.Group2Identity.PatchLeft(groupId, additions, removals)
-	db.Persist()
+	db.isDirty = result
 	return &result
 }
 
@@ -138,12 +142,13 @@ func (db *Database) PatchGroupRoles(groupId string, additions, removals []string
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
 	db.Load()
+	defer db.Persist()
 
 	if _, ok := db.Groups[groupId]; !ok {
 		return nil
 	}
 	result := db.Group2Role.PatchLeft(groupId, additions, removals)
-	db.Persist()
+	db.isDirty = result
 	return &result
 }
 
@@ -169,11 +174,12 @@ func (db *Database) PatchGroupEntitlements(groupId string, additions, removals [
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
 	db.Load()
+	defer db.Persist()
 
 	if _, ok := db.Groups[groupId]; !ok {
 		return nil
 	}
 	result := db.Group2Entitlement.PatchLeft(groupId, additions, removals)
-	db.Persist()
+	db.isDirty = result
 	return &result
 }

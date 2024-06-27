@@ -20,6 +20,7 @@ func (db *Database) AddIdentityProvider(idp *resources.IdentityProvider) (*resou
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
 	db.Load()
+	defer db.Persist()
 
 	// Note that this is not a required field (as per the OpenAPI spec), but
 	// since we want to use the same value as the ID, we have to enforce it to
@@ -38,7 +39,7 @@ func (db *Database) AddIdentityProvider(idp *resources.IdentityProvider) (*resou
 	entry := *idp
 	entry.Id = &id
 	db.Idps[id] = entry
-	db.Persist()
+	db.isDirty = true
 	return &entry, nil
 }
 
@@ -62,6 +63,7 @@ func (db *Database) UpdateIdentityProvider(ctx context.Context, idp *resources.I
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
 	db.Load()
+	defer db.Persist()
 
 	// Note that this field is optional (as per OpenAPI spec), but we need it to
 	// be non-nil to perform the operation.
@@ -74,7 +76,7 @@ func (db *Database) UpdateIdentityProvider(ctx context.Context, idp *resources.I
 	}
 
 	db.Idps[*idp.Id] = *idp
-	db.Persist()
+	db.isDirty = true
 	return idp
 }
 
@@ -85,12 +87,12 @@ func (db *Database) DeleteIdentityProvider(id string) bool {
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
 	db.Load()
+	defer db.Persist()
 
 	if _, ok := db.Idps[id]; !ok {
 		return false
 	}
-	defer db.Persist()
 	delete(db.Idps, id)
-	db.Persist()
+	db.isDirty = true
 	return true
 }

@@ -12,6 +12,8 @@ import (
 // Database represents an in-memory relational storage which keeps track of
 // various kinds of entities.
 type Database struct {
+	isDirty bool
+
 	stateFilename     string
 	zeroStateFilename string
 
@@ -100,11 +102,19 @@ func (db *Database) load(filename string) error {
 	return nil
 }
 
-// Persist writes the state to the source file.
+// Persist writes the state to the source file, if there is any unpersisted changes.
 func (db *Database) Persist() error {
 	db.persistMutex.Lock()
 	defer db.persistMutex.Unlock()
-	return db.persist()
+	if !db.isDirty {
+		return nil
+	}
+	err := db.persist()
+	if err != nil {
+		return err
+	}
+	db.isDirty = false
+	return nil
 }
 
 func (db *Database) persist() error {
