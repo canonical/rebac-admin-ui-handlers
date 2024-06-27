@@ -10,6 +10,7 @@ import (
 	"example/cmd/database"
 )
 
+// RolesService implements the `RolesService` interface.
 type RolesService struct {
 	Database *database.Database
 }

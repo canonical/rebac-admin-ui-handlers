@@ -7,14 +7,16 @@ import (
 	"github.com/canonical/rebac-admin-ui-handlers/v1/resources"
 )
 
+// ListGroup returns the list of groups.
 func (db *Database) ListGroups() []resources.Group {
 	db.mutex.RLock()
 	defer db.mutex.RUnlock()
 	db.Load()
 
-	return GetMapValues(db.Groups)
+	return getMapValues(db.Groups)
 }
 
+// AddGroup adds a new group.
 func (db *Database) AddGroup(group *resources.Group) (*resources.Group, error) {
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
@@ -34,6 +36,8 @@ func (db *Database) AddGroup(group *resources.Group) (*resources.Group, error) {
 	return &entry, nil
 }
 
+// GetGroup returns a group identified by given ID. If nothing found, the method
+// returns nil.
 func (db *Database) GetGroup(groupId string) *resources.Group {
 	db.mutex.RLock()
 	defer db.mutex.RUnlock()
@@ -46,6 +50,8 @@ func (db *Database) GetGroup(groupId string) *resources.Group {
 	return &result
 }
 
+// UpdateGroup updates a group to the given value. If nothing found, the method
+// returns nil.
 func (db *Database) UpdateGroup(ctx context.Context, group *resources.Group) *resources.Group {
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
@@ -60,6 +66,8 @@ func (db *Database) UpdateGroup(ctx context.Context, group *resources.Group) *re
 	return group
 }
 
+// DeleteGroup deletes a group identified by given ID. If nothing found, the
+// method returns false. On a successful deletion, the method returns true.
 func (db *Database) DeleteGroup(groupId string) bool {
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
@@ -77,6 +85,7 @@ func (db *Database) DeleteGroup(groupId string) bool {
 	return true
 }
 
+// GetGroupIdentities returns identities associated with a group identified by given ID.
 func (db *Database) GetGroupIdentities(groupId string) []resources.Identity {
 	db.mutex.RLock()
 	defer db.mutex.RUnlock()
@@ -90,6 +99,10 @@ func (db *Database) GetGroupIdentities(groupId string) []resources.Identity {
 	})
 }
 
+// PatchGroupIdentities patches identities associated with a group identified
+// by given ID. If nothing found, the method returns nil. If nothing changes
+// after applying the patch, the method returns (a pointer to) false; otherwise,
+// it returns (a pointer to) true.
 func (db *Database) PatchGroupIdentities(groupId string, additions, removals []string) *bool {
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
@@ -103,6 +116,7 @@ func (db *Database) PatchGroupIdentities(groupId string, additions, removals []s
 	return &result
 }
 
+// GetGroupRoles returns roles associated with a group identified by given ID.
 func (db *Database) GetGroupRoles(groupId string) []resources.Role {
 	db.mutex.RLock()
 	defer db.mutex.RUnlock()
@@ -116,6 +130,10 @@ func (db *Database) GetGroupRoles(groupId string) []resources.Role {
 	})
 }
 
+// PatchGroupRoles patches roles associated with a group identified by given ID.
+// If nothing found, the method returns nil. If nothing changes after applying
+// the patch, the method returns (a pointer to) false; otherwise, it returns (a
+// pointer to) true.
 func (db *Database) PatchGroupRoles(groupId string, additions, removals []string) *bool {
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
@@ -129,6 +147,7 @@ func (db *Database) PatchGroupRoles(groupId string, additions, removals []string
 	return &result
 }
 
+// GetGroupEntitlements returns entitlements associated with a group identified by given ID.
 func (db *Database) GetGroupEntitlements(groupId string) []resources.EntityEntitlement {
 	db.mutex.RLock()
 	defer db.mutex.RUnlock()
@@ -142,6 +161,10 @@ func (db *Database) GetGroupEntitlements(groupId string) []resources.EntityEntit
 	})
 }
 
+// PatchGroupEntitlements patches entitlements associated with a group
+// identified by given ID. If nothing found, the method returns nil. If nothing
+// changes after applying the patch, the method returns (a pointer to) false;
+// otherwise, it returns (a pointer to) true.
 func (db *Database) PatchGroupEntitlements(groupId string, additions, removals []string) *bool {
 	db.mutex.Lock()
 	defer db.mutex.Unlock()

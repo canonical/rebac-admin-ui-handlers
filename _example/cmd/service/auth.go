@@ -12,11 +12,14 @@ type User struct {
 	name string
 }
 
+// HappyAuthenticator implements a happy (all-granted) authenticator.
 type HappyAuthenticator struct{}
 
 // For doc/test sake, to hint that the struct needs to implement a specific interface.
 var _ interfaces.Authenticator = &HappyAuthenticator{}
 
+// Authenticate extracts the calling user information from the the given HTTP
+// request. See the `Authenticator` interface for more.
 func (a *HappyAuthenticator) Authenticate(r *http.Request) (any, error) {
 	// This method is going to be called on every HTTP request. It can use the
 	// provided HTTP request to perform user authentication (e.g., by checking

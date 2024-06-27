@@ -8,6 +8,7 @@ import (
 	"github.com/canonical/rebac-admin-ui-handlers/v1/resources"
 )
 
+// EntitlementsService implements the `EntitlementsService` interface.
 type EntitlementsService struct {
 	Database *database.Database
 }

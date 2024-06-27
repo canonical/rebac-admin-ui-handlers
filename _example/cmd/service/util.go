@@ -29,6 +29,8 @@ func unmarshalPageToken(t string) pageToken {
 	return token
 }
 
+// Paginate accepts the entire list of data entries, and returns a paginated
+// response from that based on the requested page/size/token.
 func Paginate[T any](
 	data []T,
 	requestedSize *resources.PaginationSize,

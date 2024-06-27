@@ -9,6 +9,7 @@ import (
 	"example/cmd/database"
 )
 
+// ResourcesService implements the `ResourcesService` interface.
 type ResourcesService struct {
 	Database *database.Database
 }

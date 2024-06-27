@@ -7,18 +7,23 @@ import (
 	"github.com/canonical/rebac-admin-ui-handlers/v1/resources"
 )
 
+// ListIdentityProviders returns the list of identity providers.
 func (db *Database) ListIdentityProviders() []resources.IdentityProvider {
 	db.mutex.RLock()
 	defer db.mutex.RUnlock()
 
-	return GetMapValues(db.Idps)
+	return getMapValues(db.Idps)
 }
 
+// AddIdentityProvider adds a new identity provider.
 func (db *Database) AddIdentityProvider(idp *resources.IdentityProvider) (*resources.IdentityProvider, error) {
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
 	db.Load()
 
+	// Note that this is not a required field (as per the OpenAPI spec), but
+	// since we want to use the same value as the ID, we have to enforce it to
+	// be non-nil.
 	if idp.Name == nil {
 		return nil, errors.New("missing name")
 	}
@@ -37,6 +42,8 @@ func (db *Database) AddIdentityProvider(idp *resources.IdentityProvider) (*resou
 	return &entry, nil
 }
 
+// GetIdentityProvider returns an identity provider identified by given ID. If
+// nothing found, the method returns nil.
 func (db *Database) GetIdentityProvider(id string) *resources.IdentityProvider {
 	db.mutex.RLock()
 	defer db.mutex.RUnlock()
@@ -49,11 +56,15 @@ func (db *Database) GetIdentityProvider(id string) *resources.IdentityProvider {
 	return &result
 }
 
+// UpdateIdentityProvider updates an identity provider to the given value. If
+// nothing found or the ID field is not set, the method returns nil.
 func (db *Database) UpdateIdentityProvider(ctx context.Context, idp *resources.IdentityProvider) *resources.IdentityProvider {
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
 	db.Load()
 
+	// Note that this field is optional (as per OpenAPI spec), but we need it to
+	// be non-nil to perform the operation.
 	if idp.Id == nil {
 		return nil
 	}
@@ -67,6 +78,9 @@ func (db *Database) UpdateIdentityProvider(ctx context.Context, idp *resources.I
 	return idp
 }
 
+// DeleteIdentityProvider deletes an identity provider identified by given ID.
+// If nothing found, the method returns false. On a successful deletion, the
+// method returns true.
 func (db *Database) DeleteIdentityProvider(id string) bool {
 	db.mutex.Lock()
 	defer db.mutex.Unlock()

@@ -24,12 +24,12 @@ type Database struct {
 	Roles      map[string]resources.Role
 	Idps       map[string]resources.IdentityProvider
 
-	Group2Identity       *relationship
-	Group2Role           *relationship
-	Group2Entitlement    *relationship
-	Identity2Role        *relationship
-	Identity2Entitlement *relationship
-	Role2Entitlement     *relationship
+	Group2Identity       *Relationship
+	Group2Role           *Relationship
+	Group2Entitlement    *Relationship
+	Identity2Role        *Relationship
+	Identity2Entitlement *Relationship
+	Role2Entitlement     *Relationship
 
 	// Constant data
 	UserEntitlements           []resources.EntityEntitlement
@@ -39,16 +39,20 @@ type Database struct {
 	Capabilities               []resources.Capability
 }
 
+// NewDatabase creates a new in-memory database instance. The `stateFilename`
+// argument should point to a JSON file that will be used to persist/load data.
+// The `zeroStateFilename` should to a zero state file to be used when resetting
+// the state (or when there the `stateFilename` does not exist).
 func NewDatabase(stateFilename string, zeroStateFilename string) *Database {
 	result := &Database{
 		stateFilename:     stateFilename,
 		zeroStateFilename: zeroStateFilename,
 	}
-	CleanupDatabase(result)
+	cleanupDatabase(result)
 	return result
 }
 
-func CleanupDatabase(db *Database) {
+func cleanupDatabase(db *Database) {
 	db.Groups = map[string]resources.Group{}
 	db.Identities = map[string]resources.Identity{}
 	db.Roles = map[string]resources.Role{}
@@ -68,6 +72,7 @@ func CleanupDatabase(db *Database) {
 	db.Capabilities = []resources.Capability{}
 }
 
+// Load populates the state from the source.
 func (db *Database) Load() error {
 	db.persistMutex.Lock()
 	defer db.persistMutex.Unlock()
@@ -88,13 +93,14 @@ func (db *Database) load(filename string) error {
 			return fmt.Errorf("failed to read state file %s: %w", filename, err)
 		}
 	}
-	CleanupDatabase(db)
+	cleanupDatabase(db)
 	if err := json.Unmarshal(raw, &db); err != nil {
 		return fmt.Errorf("failed to unmarshal state data: %w", err)
 	}
 	return nil
 }
 
+// Persist writes the state to the source file.
 func (db *Database) Persist() error {
 	db.persistMutex.Lock()
 	defer db.persistMutex.Unlock()
@@ -109,6 +115,7 @@ func (db *Database) persist() error {
 	return nil
 }
 
+// Reset cleans up database and loads the zero-state data.
 func (db *Database) Reset() error {
 	db.persistMutex.Lock()
 	defer db.persistMutex.Unlock()

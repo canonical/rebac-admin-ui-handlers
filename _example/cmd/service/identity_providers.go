@@ -10,6 +10,7 @@ import (
 	"example/cmd/database"
 )
 
+// IdentityProvidersService implements the `IdentityProvidersService` interface.
 type IdentityProvidersService struct {
 	Database *database.Database
 }

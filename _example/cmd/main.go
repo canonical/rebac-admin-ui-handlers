@@ -11,7 +11,10 @@ import (
 	"example/cmd/service"
 )
 
+// stateFilename where to persist/load data to/from.
 const stateFilename = "state.json"
+
+// zeroStateFilename where to load the data when resetting/starting.
 const zeroStateFilename = "state.zero.json"
 
 func main() {

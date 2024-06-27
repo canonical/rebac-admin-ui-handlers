@@ -7,14 +7,16 @@ import (
 	"github.com/canonical/rebac-admin-ui-handlers/v1/resources"
 )
 
+// ListIdentities returns the list of identities.
 func (db *Database) ListIdentities() []resources.Identity {
 	db.mutex.RLock()
 	defer db.mutex.RUnlock()
 	db.Load()
 
-	return GetMapValues(db.Identities)
+	return getMapValues(db.Identities)
 }
 
+// AddIdentity adds a new identity.
 func (db *Database) AddIdentity(identity *resources.Identity) (*resources.Identity, error) {
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
@@ -34,6 +36,8 @@ func (db *Database) AddIdentity(identity *resources.Identity) (*resources.Identi
 	return &entry, nil
 }
 
+// GetIdentity returns an identity identified by given ID. If nothing found, the
+// method returns nil.
 func (db *Database) GetIdentity(identityId string) *resources.Identity {
 	db.mutex.RLock()
 	defer db.mutex.RUnlock()
@@ -46,6 +50,8 @@ func (db *Database) GetIdentity(identityId string) *resources.Identity {
 	return &result
 }
 
+// UpdateIdentity updates an identity to the given value. If nothing found, the
+// method returns nil.
 func (db *Database) UpdateIdentity(ctx context.Context, identity *resources.Identity) *resources.Identity {
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
@@ -59,6 +65,8 @@ func (db *Database) UpdateIdentity(ctx context.Context, identity *resources.Iden
 	return identity
 }
 
+// DeleteIdentity deletes an identity identified by given ID. If nothing found,
+// the method returns false. On a successful deletion, the method returns true.
 func (db *Database) DeleteIdentity(identityId string) bool {
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
@@ -75,6 +83,7 @@ func (db *Database) DeleteIdentity(identityId string) bool {
 	return true
 }
 
+// GetIdentityGroups returns groups associated with an identity identified by given ID.
 func (db *Database) GetIdentityGroups(identityId string) []resources.Group {
 	db.mutex.RLock()
 	defer db.mutex.RUnlock()
@@ -88,6 +97,10 @@ func (db *Database) GetIdentityGroups(identityId string) []resources.Group {
 	})
 }
 
+// PatchIdentityGroups patches groups associated with an identity identified by
+// given ID. If nothing found, the method returns nil. If nothing changes after
+// applying the patch, the method returns (a pointer to) false; otherwise, it
+// returns (a pointer to) true.
 func (db *Database) PatchIdentityGroups(identityId string, additions, removals []string) *bool {
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
@@ -101,6 +114,7 @@ func (db *Database) PatchIdentityGroups(identityId string, additions, removals [
 	return &result
 }
 
+// GetIdentityRoles returns roles associated with an identity identified by given ID.
 func (db *Database) GetIdentityRoles(identityId string) []resources.Role {
 	db.mutex.RLock()
 	defer db.mutex.RUnlock()
@@ -114,6 +128,10 @@ func (db *Database) GetIdentityRoles(identityId string) []resources.Role {
 	})
 }
 
+// PatchIdentityRoles patches roles associated with an identity identified by
+// given ID. If nothing found, the method returns nil. If nothing changes after
+// applying the patch, the method returns (a pointer to) false; otherwise, it
+// returns (a pointer to) true.
 func (db *Database) PatchIdentityRoles(identityId string, additions, removals []string) *bool {
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
@@ -127,6 +145,7 @@ func (db *Database) PatchIdentityRoles(identityId string, additions, removals []
 	return &result
 }
 
+// GetIdentityEntitlements returns entitlements associated with an identity identified by given ID.
 func (db *Database) GetIdentityEntitlements(identityId string) []resources.EntityEntitlement {
 	db.mutex.RLock()
 	defer db.mutex.RUnlock()
@@ -140,6 +159,10 @@ func (db *Database) GetIdentityEntitlements(identityId string) []resources.Entit
 	})
 }
 
+// PatchIdentityEntitlements patches entitlements associated with an identity
+// identified by given ID. If nothing found, the method returns nil. If nothing
+// changes after applying the patch, the method returns (a pointer to) false;
+// otherwise, it returns (a pointer to) true.
 func (db *Database) PatchIdentityEntitlements(identityId string, additions, removals []string) *bool {
 	db.mutex.Lock()
 	defer db.mutex.Unlock()

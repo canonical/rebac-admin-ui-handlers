@@ -10,6 +10,7 @@ import (
 	"example/cmd/database"
 )
 
+// GroupsService implements the `GroupsService` interface.
 type GroupsService struct {
 	Database *database.Database
 }

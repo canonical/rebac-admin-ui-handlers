@@ -5,45 +5,31 @@ import (
 	"sync"
 )
 
+// Relationship maintains a unique set of (left, right) tuples to track the
+// relation between entities of (one or two) specific types. This can be viewed
+// as an in-memory implementation of foreign-key Relationship and JOIN
+// operations in relational databases.
+type Relationship struct {
+	mutex  sync.RWMutex
+	Tuples []RelationshipTuple
+}
+
+// RelationshipTuple represents a (left, right) tuple.
 type RelationshipTuple struct {
 	Left  string
 	Right string
 }
 
-type relationship struct {
-	mutex  sync.RWMutex
-	Tuples []RelationshipTuple
-}
-
-func NewRelationship() *relationship {
-	return &relationship{
+// NewRelationship creates a new Relationship instance.
+func NewRelationship() *Relationship {
+	return &Relationship{
 		Tuples: []RelationshipTuple{},
 	}
 }
 
-func (r *relationship) GetAllLefts() []string {
-	r.mutex.RLock()
-	defer r.mutex.RUnlock()
-
-	result := []string{}
-	for _, t := range r.Tuples {
-		result = append(result, t.Left)
-	}
-	return result
-}
-
-func (r *relationship) GetAllRights() []string {
-	r.mutex.RLock()
-	defer r.mutex.RUnlock()
-
-	result := []string{}
-	for _, t := range r.Tuples {
-		result = append(result, t.Right)
-	}
-	return result
-}
-
-func (r *relationship) GetLefts(right string) []string {
+// GetLefts returns all "left" components of tuples that have a specific "right"
+// component.
+func (r *Relationship) GetLefts(right string) []string {
 	r.mutex.RLock()
 	defer r.mutex.RUnlock()
 
@@ -56,7 +42,9 @@ func (r *relationship) GetLefts(right string) []string {
 	return result
 }
 
-func (r *relationship) GetRights(left string) []string {
+// GetRights returns all "right" components of tuples that have a specific "left"
+// component.
+func (r *Relationship) GetRights(left string) []string {
 	r.mutex.RLock()
 	defer r.mutex.RUnlock()
 
@@ -69,13 +57,15 @@ func (r *relationship) GetRights(left string) []string {
 	return result
 }
 
-func (r *relationship) Add(left string, right string) bool {
+// Add adds a new tuple to the relationship. If the tuple already exists, the
+// method returns false; otherwise returns true.
+func (r *Relationship) Add(left string, right string) bool {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
 	return r.add(left, right)
 }
 
-func (r *relationship) add(left string, right string) bool {
+func (r *Relationship) add(left string, right string) bool {
 	for _, t := range r.Tuples {
 		if t.Left == left && t.Right == right {
 			// Already exists
@@ -86,13 +76,15 @@ func (r *relationship) add(left string, right string) bool {
 	return true
 }
 
-func (r *relationship) Remove(left string, right string) bool {
+// Remove removes a tuple from the relationship. If the tuple does not exist,
+// the method returns false; otherwise returns true.
+func (r *Relationship) Remove(left string, right string) bool {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
 	return r.remove(left, right)
 }
 
-func (r *relationship) remove(left string, right string) bool {
+func (r *Relationship) remove(left string, right string) bool {
 	old := r.Tuples
 	r.Tuples = slices.DeleteFunc(r.Tuples, func(t RelationshipTuple) bool {
 		return t.Left == left && t.Right == right
@@ -100,7 +92,9 @@ func (r *relationship) remove(left string, right string) bool {
 	return len(old) != len(r.Tuples)
 }
 
-func (r *relationship) RemoveLeft(left string) bool {
+// RemoveLeft removes all tuples that have a specific "left" component. If no
+// tuple was deleted, the method returns false; otherwise returns true.
+func (r *Relationship) RemoveLeft(left string) bool {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
 	old := r.Tuples
@@ -110,7 +104,9 @@ func (r *relationship) RemoveLeft(left string) bool {
 	return len(old) != len(r.Tuples)
 }
 
-func (r *relationship) RemoveRight(right string) bool {
+// RemoveRight removes all tuples that have a specific "right" component. If no
+// tuple was deleted, the method returns false; otherwise returns true.
+func (r *Relationship) RemoveRight(right string) bool {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
 	old := r.Tuples
@@ -120,7 +116,10 @@ func (r *relationship) RemoveRight(right string) bool {
 	return len(old) != len(r.Tuples)
 }
 
-func (r *relationship) PatchLeft(left string, additions, removals []string) bool {
+// PatchLeft adds and removes batches of "right" component values that for a
+// specific "left" component. If nothing was added/removed, the method returns
+// false; otherwise returns true.
+func (r *Relationship) PatchLeft(left string, additions, removals []string) bool {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
 
@@ -134,7 +133,10 @@ func (r *relationship) PatchLeft(left string, additions, removals []string) bool
 	return result
 }
 
-func (r *relationship) PatchRight(right string, additions, removals []string) bool {
+// PatchRight adds and removes batches of "left" component values that for a
+// specific "right" component. If nothing was added/removed, the method returns
+// false; otherwise returns true.
+func (r *Relationship) PatchRight(right string, additions, removals []string) bool {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
 

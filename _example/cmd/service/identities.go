@@ -10,6 +10,7 @@ import (
 	"example/cmd/database"
 )
 
+// IdentitiesService implements the `IdentitiesService` interface.
 type IdentitiesService struct {
 	Database *database.Database
 }
