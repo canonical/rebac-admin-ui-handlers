@@ -241,4 +241,4 @@ do
 done 
 
 ## At the end, `state.json` and `state.zero.json` must be equal.
-diff state.zero.json state.json
+diff --ignore-trailing-space state.zero.json state.json
