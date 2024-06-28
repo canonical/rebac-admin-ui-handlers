@@ -61,7 +61,7 @@ func main() {
 		}
 	})
 	mux.HandleFunc("/ready", func(w http.ResponseWriter, r *http.Request) {
-		w.Write(nil)
+		w.WriteHeader(http.StatusOK)
 	})
 
 	exit := make(chan bool, 1)
