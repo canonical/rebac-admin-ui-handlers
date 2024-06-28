@@ -11,15 +11,17 @@ help:
 
 # Run the server
 run:
-	go run ./cmd
+	@go run ./cmd
 .PHONY: run
 
 # Test the server (with cleanup at the end)
 test:
-	bash test.sh --cleanup
+	@bash test.sh --bail-on-error --reset --cleanup
+	@# At the end, `state.json` and `state.zero.json` must be equal.
+	@diff --ignore-trailing-space state.zero.json state.json || echo "unexpected 'state.json' content"
 .PHONY: test
 
 # Clean persisted state
 clean:
-	rm state.json
+	@rm state.json
 .PHONY: clean
