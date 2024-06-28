@@ -60,6 +60,10 @@ func main() {
 			w.Write([]byte(err.Error()))
 		}
 	})
+	mux.HandleFunc("/ready", func(w http.ResponseWriter, r *http.Request) {
+		w.Write(nil)
+	})
+
 	exit := make(chan bool, 1)
 	mux.HandleFunc("/shutdown", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Shutting down\n"))
