@@ -133,7 +133,7 @@ Let's see how the implementation of the `ListIdentities` method should look like
 
 ```go
 // ListIdentities returns a page of Identity objects of at least `size` elements if available
-func (s *IdentitiesService) ListIdentities(ctx context.Context, params *resources.GetIdentitiesParams) (*resources.PaginatedResponse[resources.Identity], error) {
+func (s *MyIdentitiesService) ListIdentities(ctx context.Context, params *resources.GetIdentitiesParams) (*resources.PaginatedResponse[resources.Identity], error) {
     raw, _ := v1.GetIdentityFromContext(ctx)
     user, _ := raw.(*User)
 
