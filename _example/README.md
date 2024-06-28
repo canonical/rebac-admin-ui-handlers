@@ -33,7 +33,7 @@ curl localhost:9999/rebac/v1/entitlements/raw
 
 When the server starts, it'll read the `state.json` file and populate the in-memory database from that, and whenever the state changes (e.g., by adding some entity) it'll update `state.json`. Also, before attempting to access in-memory data, the server will reload the `state.json` file, which enables a semi hot-reload behavior.
 
-At the beginning, when there's no `state.json` file, the server loads the initial data from `state.zero.json`. If you needed to reset the in-memory state to the initial state while the server is running, you can send a `GET` request to the `/reset` endpoint:
+At the beginning, when there's no `state.json` file, the server loads the initial data from `state.zero.json`. If you needed to reset the in-memory state to the initial state while the server is running, you can either delete the `state.json` file, or send a `GET` request to the `/reset` endpoint:
 
 ```sh
 curl localhost:9999/reset
@@ -43,8 +43,9 @@ There's also a shell script, `test.sh` that invokes some API endpoints via `curl
 
 ## Testing
 
-You can use `make test` to spin up the server and invoke various API endpoints. Note that when using `make test` the server is reset at the end (by providing `--cleanup` option to the `test.sh` script, which deletes the created entities/relationships) to make sure it's working as expected. If you want to keep the state, just call the underlying shell script `test.sh` with no arguments.
+You can use `make test` to spin up the server and invoke various API endpoints. Note that when using `make test` the server is reset at the start and the end of the test (by providing `--cleanup` option to the `test.sh` script, which deletes the created entities/relationships) to make sure it's working as expected.
 
+If you want to keep the new state just call the underlying shell script, `test.sh`, with no arguments (or with `--reset` to drop the existing state).
 
 ## Back-end implementation
 
