@@ -39,7 +39,7 @@ At the beginning, when there's no `state.json` file, the server loads the initia
 curl localhost:9999/reset
 ```
 
-There's also a shell script, `test.sh` that invokes some API endpoints via `curl`. This is meant to be used as a test and also CLI example reference. You can also use it to populate some data into the running server.
+There's also a shell script, `test.sh` that invokes some API endpoints via `curl`. This is meant to be used as a test and also CLI example reference. You can also use it to populate some data into the running server. Try `test.sh --help` for more about the script.
 
 ## Testing
 
@@ -77,7 +77,7 @@ If the authentication fails, the method can return an error like this:
 return nil, v1.NewAuthenticationError("invalid token")
 ```
 
-It's best to use the error types defined in the `v1` package, so that the library could respond with the correct HTTP status code. Note that, if there's some other error (e.g., a database/IdP communication failure), the method should not use the `NewAuthenticationError`, because it's basically an internal server error:
+It's best to use the error types defined in the `v1` package, so that the library could respond with the correct HTTP status code. Note that, if there's some other error (e.g., a database/IdP communication failure), the method should not use the `NewAuthenticationError`, because it's basically an internal server error. In such cases it's best to use `NewUnknownError`:
 
 ```go
 return nil, v1.NewUnknownError("database not reachable")
@@ -99,12 +99,14 @@ This returned value, will be accessible to other implemented methods, via the `v
 
 To handle requests, a service has to implement some of the `*Service` interfaces defined in the  `v1/interfaces` package:
 
-- `IdentitiesService`
-- `IdentityProvidersService`
-- `GroupsService`
-- `RolesService`
-- `ResourcesService`
-- `EntitlementsService`
+| Interface                  | API Endpoints       |
+| -------------------------- | ------------------- |
+| `IdentitiesService`        | `/identities/*`     |
+| `IdentityProvidersService` | `/authentication/*` |
+| `GroupsService`            | `/groups/*`         |
+| `RolesService`             | `/roles/*`          |
+| `ResourcesService`         | `/resources/*`      |
+| `EntitlementsService`      | `/entitlements/*`   |
 
 > ❓ For example implementations of the above interfaces, check out the `cmd/service` package.
 
@@ -255,3 +257,7 @@ If it's done correctly, you should be able to access the HTTP endpoints via a `c
 ```sh
 curl <host>:<port>/rebac/v1/swagger.json
 ```
+
+## Feedback
+
+Please provide your feedback via issues/PRs.
