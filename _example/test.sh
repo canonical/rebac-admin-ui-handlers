@@ -57,7 +57,7 @@ if ! curl -s "$_host/health"; then
     _PID1=$!
 
     echo waiting for the server to be ready
-    while ! curl -s "$_host/health"
+    while ! curl -s "$_host/ready"
     do
         sleep 0.1
     done
