@@ -33,18 +33,19 @@ curl localhost:9999/rebac/v1/entitlements/raw
 
 When the server starts, it'll read the `state.json` file and populate the in-memory database from that, and whenever the state changes (e.g., by adding some entity) it'll update `state.json`. Also, before attempting to access in-memory data, the server will reload the `state.json` file, which enables a semi hot-reload behavior.
 
-At the beginning, when there's no `state.json` file, the server loads the initial data from `state.zero.json`. If you needed to reset the in-memory state to the initial state while the server is running, you can send a `GET` request to the `/reset` endpoint:
+At the beginning, when there's no `state.json` file, the server loads the initial data from `state.zero.json`. If you needed to reset the in-memory state to the initial state while the server is running, you can either delete the `state.json` file, or send a `GET` request to the `/reset` endpoint:
 
 ```sh
 curl localhost:9999/reset
 ```
 
-There's also a shell script, `test.sh` that invokes some API endpoints via `curl`. This is meant to be used as a test and also CLI example reference. You can also use it to populate some data into the running server.
+There's also a shell script, `test.sh` that invokes some API endpoints via `curl`. This is meant to be used as a test and also CLI example reference. You can also use it to populate some data into the running server. Try `test.sh --help` for more about the script.
 
 ## Testing
 
-You can use `make test` to spin up the server and invoke various API endpoints. Note that when using `make test` the server is reset at the end (by providing `--cleanup` option to the `test.sh` script, which deletes the created entities/relationships) to make sure it's working as expected. If you want to keep the state, just call the underlying shell script `test.sh` with no arguments.
+You can use `make test` to spin up the server and invoke various API endpoints. Note that when using `make test` the server is reset at the start and the end of the test (by providing `--cleanup` option to the `test.sh` script, which deletes the created entities/relationships) to make sure it's working as expected.
 
+If you want to keep the new state just call the underlying shell script, `test.sh`, with no arguments (or with `--reset` to drop the existing state).
 
 ## Back-end implementation
 
@@ -76,7 +77,7 @@ If the authentication fails, the method can return an error like this:
 return nil, v1.NewAuthenticationError("invalid token")
 ```
 
-It's best to use the error types defined in the `v1` package, so that the library could respond with the correct HTTP status code. Note that, if there's some other error (e.g., a database/IdP communication failure), the method should not use the `NewAuthenticationError`, because it's basically an internal server error:
+It's best to use the error types defined in the `v1` package, so that the library could respond with the correct HTTP status code. Note that, if there's some other error (e.g., a database/IdP communication failure), the method should not use the `NewAuthenticationError`, because it's basically an internal server error. In such cases it's best to use `NewUnknownError`:
 
 ```go
 return nil, v1.NewUnknownError("database not reachable")
@@ -98,12 +99,14 @@ This returned value, will be accessible to other implemented methods, via the `v
 
 To handle requests, a service has to implement some of the `*Service` interfaces defined in the  `v1/interfaces` package:
 
-- `IdentitiesService`
-- `IdentityProvidersService`
-- `GroupsService`
-- `RolesService`
-- `ResourcesService`
-- `EntitlementsService`
+| Interface                  | API Endpoints       |
+| -------------------------- | ------------------- |
+| `IdentitiesService`        | `/identities/*`     |
+| `IdentityProvidersService` | `/authentication/*` |
+| `GroupsService`            | `/groups/*`         |
+| `RolesService`             | `/roles/*`          |
+| `ResourcesService`         | `/resources/*`      |
+| `EntitlementsService`      | `/entitlements/*`   |
 
 > ❓ For example implementations of the above interfaces, check out the `cmd/service` package.
 
@@ -132,7 +135,7 @@ Let's see how the implementation of the `ListIdentities` method should look like
 
 ```go
 // ListIdentities returns a page of Identity objects of at least `size` elements if available
-func (s *IdentitiesService) ListIdentities(ctx context.Context, params *resources.GetIdentitiesParams) (*resources.PaginatedResponse[resources.Identity], error) {
+func (s *MyIdentitiesService) ListIdentities(ctx context.Context, params *resources.GetIdentitiesParams) (*resources.PaginatedResponse[resources.Identity], error) {
     raw, _ := v1.GetIdentityFromContext(ctx)
     user, _ := raw.(*User)
 
@@ -254,3 +257,7 @@ If it's done correctly, you should be able to access the HTTP endpoints via a `c
 ```sh
 curl <host>:<port>/rebac/v1/swagger.json
 ```
+
+## Feedback
+
+Please provide your feedback via issues/PRs.
