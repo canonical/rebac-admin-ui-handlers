@@ -41,6 +41,13 @@ curl localhost:9999/reset
 
 There's also a shell script, `test.sh` that invokes some API endpoints via `curl`. This is meant to be used as a test and also CLI example reference. You can also use it to populate some data into the running server. Try `test.sh --help` for more about the script.
 
+## Pagination
+
+As per the OpenAPI spec, two kinds of pagination mechanism are possible:
+
+1. **Page and size**: this is the common way. All endpoints, except for one, in this example implementation use this approach.
+2. **Next page token**: this is a special case, where the server only responds with the link to the *next* chunk of data. Services that directly query OpenFGA have to use this approach, due to pagination limits of OpenFGA. To show how it works, the `/identities` endpoint in this example implementation uses this approach.
+
 ## Testing
 
 You can use `make test` to spin up the server and invoke various API endpoints. Note that when using `make test` the server is reset at the start and the end of the test (by providing `--cleanup` option to the `test.sh` script, which deletes the created entities/relationships) to make sure it's working as expected.
