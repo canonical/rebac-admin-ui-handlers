@@ -32,6 +32,6 @@ func (s *ResourcesService) ListResources(ctx context.Context, params *resources.
 	//    return nil, v1.NewAuthorizationError("user cannot add group")
 	//
 
-	return Paginate(s.Database.ListUserResources(), params.Size, params.Page, params.NextToken, params.NextPageToken)
+	return Paginate(s.Database.ListUserResources(), params.Size, params.Page, params.NextToken, params.NextPageToken, false)
 
 }

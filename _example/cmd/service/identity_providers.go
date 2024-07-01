@@ -22,7 +22,7 @@ var _ interfaces.IdentityProvidersService = &IdentityProvidersService{}
 
 // ListAvailableIdentityProviders returns the static list of supported identity providers.
 func (s *IdentityProvidersService) ListAvailableIdentityProviders(ctx context.Context, params *resources.GetAvailableIdentityProvidersParams) (*resources.PaginatedResponse[resources.AvailableIdentityProvider], error) {
-	return Paginate(s.Database.ListAvailableIdentityProviders(), params.Size, params.Page, params.NextToken, params.NextPageToken)
+	return Paginate(s.Database.ListAvailableIdentityProviders(), params.Size, params.Page, params.NextToken, params.NextPageToken, false)
 }
 
 // ListIdentityProviders returns a list of registered identity providers configurations.
@@ -38,7 +38,7 @@ func (s *IdentityProvidersService) ListIdentityProviders(ctx context.Context, pa
 	//    return nil, v1.NewAuthorizationError("user cannot add group")
 	//
 
-	return Paginate(s.Database.ListIdentityProviders(), params.Size, params.Page, params.NextToken, params.NextPageToken)
+	return Paginate(s.Database.ListIdentityProviders(), params.Size, params.Page, params.NextToken, params.NextPageToken, false)
 }
 
 // RegisterConfiguration register a new authentication provider configuration.

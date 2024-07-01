@@ -33,7 +33,7 @@ func (s *GroupsService) ListGroups(ctx context.Context, params *resources.GetGro
 	//    return nil, v1.NewAuthorizationError("user cannot add group")
 	//
 
-	return Paginate(s.Database.ListGroups(), params.Size, params.Page, params.NextToken, params.NextPageToken)
+	return Paginate(s.Database.ListGroups(), params.Size, params.Page, params.NextToken, params.NextPageToken, false)
 }
 
 // CreateGroup creates a single Group.
@@ -94,7 +94,7 @@ func (s *GroupsService) GetGroupIdentities(ctx context.Context, groupId string, 
 	if relatives == nil {
 		return nil, v1.NewNotFoundError("")
 	}
-	return Paginate(relatives, params.Size, params.Page, params.NextToken, params.NextPageToken)
+	return Paginate(relatives, params.Size, params.Page, params.NextToken, params.NextPageToken, false)
 }
 
 // PatchGroupIdentities performs addition or removal of identities to/from a Group identified by `groupId`.
@@ -126,7 +126,7 @@ func (s *GroupsService) GetGroupRoles(ctx context.Context, groupId string, param
 	if relatives == nil {
 		return nil, v1.NewNotFoundError("")
 	}
-	return Paginate(relatives, params.Size, params.Page, params.NextToken, params.NextPageToken)
+	return Paginate(relatives, params.Size, params.Page, params.NextToken, params.NextPageToken, false)
 }
 
 // PatchGroupRoles performs addition or removal of a Role to/from a Group identified by `groupId`.
@@ -158,7 +158,7 @@ func (s *GroupsService) GetGroupEntitlements(ctx context.Context, groupId string
 	if relatives == nil {
 		return nil, v1.NewNotFoundError("")
 	}
-	return Paginate(relatives, params.Size, params.Page, params.NextToken, params.NextPageToken)
+	return Paginate(relatives, params.Size, params.Page, params.NextToken, params.NextPageToken, false)
 }
 
 // PatchGroupEntitlements performs addition or removal of an Entitlement to/from a Group identified by `groupId`.
