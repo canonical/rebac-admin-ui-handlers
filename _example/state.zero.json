@@ -46,21 +46,37 @@
             "name": "GitHub"
         }
     ],
-    "UserResources": [
+    "Resources": [
         {
             "entity": {
-                "id": "entity-1",
-                "type": "entity-type-1"
+                "id": "entity-beta-instance-1",
+                "type": "entity-beta"
             },
-            "id": "resource-1",
-            "name": "",
+            "id": "",
+            "name": "entity-beta-instance-1",
             "parent": {
                 "entity": {
-                    "id": "entity-0",
-                    "type": "entity-type-0"
+                    "id": "entity-alpha-instance-1",
+                    "type": "entity-alpha"
                 },
-                "id": "resource-0",
-                "name": ""
+                "id": "",
+                "name": "entity-alpha-instance-1"
+            }
+        },
+        {
+            "entity": {
+                "id": "entity-beta-instance-2",
+                "type": "entity-beta"
+            },
+            "id": "",
+            "name": "entity-beta-instance-2",
+            "parent": {
+                "entity": {
+                    "id": "entity-alpha-instance-2",
+                    "type": "entity-alpha"
+                },
+                "id": "",
+                "name": "entity-alpha-instance-2"
             }
         }
     ],
