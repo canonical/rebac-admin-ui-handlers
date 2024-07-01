@@ -21,11 +21,26 @@
     "Role2Entitlement": {
         "Tuples": []
     },
-    "UserEntitlements": [
+    "Entitlements": [
         {
-            "entitlement_type": "can_verb",
-            "entity_name": "some-entity-owned-by-user",
-            "entity_type": "some-entity-type"
+            "entitlement_type": "can_foo",
+            "entity_name": "",
+            "entity_type": "entity-alpha"
+        },
+        {
+            "entitlement_type": "can_bar",
+            "entity_name": "",
+            "entity_type": "entity-alpha"
+        },
+        {
+            "entitlement_type": "can_baz",
+            "entity_name": "",
+            "entity_type": "entity-alpha"
+        },
+        {
+            "entitlement_type": "can_foo",
+            "entity_name": "",
+            "entity_type": "entity-beta"
         }
     ],
     "AvailableIdentityProviders": [

@@ -21,7 +21,7 @@ func (db *Database) ListUserEntitlements() []resources.EntityEntitlement {
 	defer db.mutex.RUnlock()
 	db.Load()
 
-	return db.UserEntitlements
+	return db.Entitlements
 }
 
 // ListAvailableIdentityProviders returns the list of available identity providers.
