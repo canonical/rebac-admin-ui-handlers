@@ -33,8 +33,7 @@ func (s *RolesService) ListRoles(ctx context.Context, params *resources.GetRoles
 	//    return nil, v1.NewAuthorizationError("user cannot add group")
 	//
 
-	return Paginate(s.Database.ListRoles(), params.Size, params.Page, params.NextToken, params.NextPageToken)
-
+	return Paginate(s.Database.ListRoles(), params.Size, params.Page, params.NextToken, params.NextPageToken, false)
 }
 
 // CreateRole creates a single Role.
@@ -93,7 +92,7 @@ func (s *RolesService) GetRoleEntitlements(ctx context.Context, roleId string, p
 	if relatives == nil {
 		return nil, v1.NewNotFoundError("")
 	}
-	return Paginate(relatives, params.Size, params.Page, params.NextToken, params.NextPageToken)
+	return Paginate(relatives, params.Size, params.Page, params.NextToken, params.NextPageToken, false)
 
 }
 

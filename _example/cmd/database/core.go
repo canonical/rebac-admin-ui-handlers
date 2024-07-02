@@ -36,9 +36,9 @@ type Database struct {
 	Role2Entitlement     *Relationship
 
 	// Constant data
-	UserEntitlements           []resources.EntityEntitlement
+	Entitlements               []resources.EntityEntitlement
 	AvailableIdentityProviders []resources.AvailableIdentityProvider
-	UserResources              []resources.Resource
+	Resources                  []resources.Resource
 	AuthModel                  string
 	Capabilities               []resources.Capability
 }
@@ -69,9 +69,9 @@ func cleanupDatabase(db *Database) {
 	db.Identity2Entitlement = NewRelationship()
 	db.Role2Entitlement = NewRelationship()
 
-	db.UserEntitlements = []resources.EntityEntitlement{}
+	db.Entitlements = []resources.EntityEntitlement{}
 	db.AvailableIdentityProviders = []resources.AvailableIdentityProvider{}
-	db.UserResources = []resources.Resource{}
+	db.Resources = []resources.Resource{}
 	db.AuthModel = ""
 	db.Capabilities = []resources.Capability{}
 }

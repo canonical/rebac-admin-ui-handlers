@@ -39,43 +39,15 @@ func Paginate[T any](
 	requestedPage *resources.PaginationPage,
 	requestedNextToken *resources.PaginationNextToken,
 	requestedNextPageToken *resources.PaginationNextTokenHeader,
+	preferNextPageToken bool,
 ) (*resources.PaginatedResponse[T], error) {
-	if requestedNextPageToken != nil || requestedNextToken != nil {
-		// TODO: we consider requestedNextToken and requestedNextPageToken are
-		// the same things, but it might not be true.
-
-		// For simplicity we assume that the token is a Base64 encoded value of
-		// a simple JSON object like `{"page":0,"size":10}`.
-
-		var raw string
-		if requestedNextPageToken != nil {
-			raw = *requestedNextPageToken
-		} else {
-			raw = *requestedNextToken
-		}
-
-		token := unmarshalPageToken(raw)
-		subset, nextPage := getSubset(data, token.Page, 10)
-
-		var nextPageToken *string
-		if nextPage != nil {
-			marshalled := marshalPageToken(pageToken{Page: *nextPage})
-			nextPageToken = &marshalled
-		}
-
-		return &resources.PaginatedResponse[T]{
-			Data: subset,
-			Meta: resources.ResponseMeta{
-				PageToken: &raw,
-				Size:      len(subset),
-			},
-			Next: resources.Next{
-				PageToken: nextPageToken,
-			},
-		}, nil
+	if preferNextPageToken || requestedNextPageToken != nil || requestedNextToken != nil {
+		return paginateWithNextPageToken(data, requestedNextToken, requestedNextPageToken)
 	}
+	return paginateWithPageAndSize(data, requestedSize, requestedPage)
+}
 
-	// Doing ordinary page/size pagination.
+func paginateWithPageAndSize[T any](data []T, requestedSize *resources.PaginationSize, requestedPage *resources.PaginationPage) (*resources.PaginatedResponse[T], error) {
 	page := 0
 	if requestedPage != nil {
 		page = *requestedPage
@@ -104,7 +76,43 @@ func Paginate[T any](
 			Page: nextPage,
 		},
 	}, nil
+}
 
+func paginateWithNextPageToken[T any](data []T, requestedNextToken *resources.PaginationNextToken, requestedNextPageToken *resources.PaginationNextTokenHeader) (*resources.PaginatedResponse[T], error) {
+	// TODO: we consider requestedNextToken and requestedNextPageToken are
+	// the same things, but it might not be true.
+
+	// For simplicity we assume that the token is a Base64 encoded value of
+	// a simple JSON object like `{"page":0,"size":10}`.
+
+	var raw string
+	if requestedNextPageToken != nil {
+		raw = *requestedNextPageToken
+	} else if requestedNextToken != nil {
+		raw = *requestedNextToken
+	} else {
+		raw = marshalPageToken(pageToken{})
+	}
+
+	token := unmarshalPageToken(raw)
+	subset, nextPage := getSubset(data, token.Page, 10)
+
+	var nextPageToken *string
+	if nextPage != nil {
+		marshalled := marshalPageToken(pageToken{Page: *nextPage})
+		nextPageToken = &marshalled
+	}
+
+	return &resources.PaginatedResponse[T]{
+		Data: subset,
+		Meta: resources.ResponseMeta{
+			PageToken: &raw,
+			Size:      len(subset),
+		},
+		Next: resources.Next{
+			PageToken: nextPageToken,
+		},
+	}, nil
 }
 
 func getSubset[T any](data []T, page, size int) ([]T, *int) {

@@ -31,7 +31,7 @@ func (s *EntitlementsService) ListEntitlements(ctx context.Context, params *reso
 	//    return nil, v1.NewAuthorizationError("user cannot add group")
 	//
 
-	return Paginate(s.Database.ListUserEntitlements(), params.Size, params.Page, params.NextToken, params.NextPageToken)
+	return Paginate(s.Database.ListUserEntitlements(), params.Size, params.Page, params.NextToken, params.NextPageToken, false)
 }
 
 // RawEntitlements returns the list of entitlements as raw text.

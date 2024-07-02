@@ -33,7 +33,7 @@ func (s *IdentitiesService) ListIdentities(ctx context.Context, params *resource
 	//    return nil, v1.NewAuthorizationError("user cannot add group")
 	//
 
-	return Paginate(s.Database.ListIdentities(), params.Size, params.Page, params.NextToken, params.NextPageToken)
+	return Paginate(s.Database.ListIdentities(), params.Size, params.Page, params.NextToken, params.NextPageToken, true)
 }
 
 // CreateIdentity creates a single Identity.
@@ -92,7 +92,7 @@ func (s *IdentitiesService) GetIdentityGroups(ctx context.Context, identityId st
 	if relatives == nil {
 		return nil, v1.NewNotFoundError("")
 	}
-	return Paginate(relatives, params.Size, params.Page, params.NextToken, params.NextPageToken)
+	return Paginate(relatives, params.Size, params.Page, params.NextToken, params.NextPageToken, true)
 }
 
 // PatchIdentityGroups performs addition or removal of a Group to/from an Identity.
@@ -124,7 +124,7 @@ func (s *IdentitiesService) GetIdentityRoles(ctx context.Context, identityId str
 	if relatives == nil {
 		return nil, v1.NewNotFoundError("")
 	}
-	return Paginate(relatives, params.Size, params.Page, params.NextToken, params.NextPageToken)
+	return Paginate(relatives, params.Size, params.Page, params.NextToken, params.NextPageToken, true)
 
 }
 
@@ -157,7 +157,7 @@ func (s *IdentitiesService) GetIdentityEntitlements(ctx context.Context, identit
 	if relatives == nil {
 		return nil, v1.NewNotFoundError("")
 	}
-	return Paginate(relatives, params.Size, params.Page, params.NextToken, params.NextPageToken)
+	return Paginate(relatives, params.Size, params.Page, params.NextToken, params.NextPageToken, true)
 }
 
 // PatchIdentityEntitlements performs addition or removal of an Entitlement to/from an Identity.
