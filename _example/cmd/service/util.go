@@ -85,11 +85,13 @@ func paginateWithNextPageToken[T any](data []T, requestedNextToken *resources.Pa
 	// For simplicity we assume that the token is a Base64 encoded value of
 	// a simple JSON object like `{"page":0,"size":10}`.
 
-	raw := marshalPageToken(pageToken{})
+	var raw string
 	if requestedNextPageToken != nil {
 		raw = *requestedNextPageToken
 	} else if requestedNextToken != nil {
 		raw = *requestedNextToken
+	} else {
+		raw = marshalPageToken(pageToken{})
 	}
 
 	token := unmarshalPageToken(raw)
