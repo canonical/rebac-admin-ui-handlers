@@ -32,7 +32,7 @@ type EntitlementsService struct {
 var _ interfaces.EntitlementsService = &EntitlementsService{}
 
 // ListEntitlements returns the list of entitlements in JSON format.
-func (s *EntitlementsService) ListEntitlements(ctx context.Context, params *resources.GetEntitlementsParams) (*resources.PaginatedResponse[resources.EntityEntitlement], error) {
+func (s *EntitlementsService) ListEntitlements(ctx context.Context, params *resources.GetEntitlementsParams) ([]resources.EntityEntitlement, error) {
 	// For the sake of this example we allow everyone to call this method. If it's not
 	// the case, you can do the following to get the user:
 	//
@@ -44,7 +44,7 @@ func (s *EntitlementsService) ListEntitlements(ctx context.Context, params *reso
 	//    return nil, v1.NewAuthorizationError("user cannot add group")
 	//
 
-	return Paginate(s.Database.ListUserEntitlements(), params.Size, params.Page, params.NextToken, params.NextPageToken, false)
+	return s.Database.ListUserEntitlements(), nil
 }
 
 // RawEntitlements returns the list of entitlements as raw text.
