@@ -200,6 +200,8 @@ done
 
 echo -n 'GET resources: '
 curl $_opts -X GET "$_base/resources"
+echo -n 'GET resources: '
+curl $_opts -X GET "$_base/resources?entityType=foo"
 echo -n 'GET entitlements: '
 curl $_opts -X GET "$_base/entitlements"
 echo -n 'GET entitlements/raw: '
