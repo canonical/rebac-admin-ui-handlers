@@ -38,13 +38,11 @@ func TestHandler_Entitlements_Success(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockEntitlements := &resources.PaginatedResponse[resources.EntityEntitlement]{
-		Data: []resources.EntityEntitlement{
-			{
-				EntitlementType: "mock-entl-type",
-				EntityName:      "mock-entity-name",
-				EntityType:      "mock-entity-type",
-			},
+	mockEntitlements := []resources.EntityEntitlement{
+		{
+			EntitlementType: "mock-entl-type",
+			EntityName:      "",
+			EntityType:      "mock-entity-type",
 		},
 	}
 
@@ -72,7 +70,10 @@ func TestHandler_Entitlements_Success(t *testing.T) {
 			},
 			expectedStatus: http.StatusOK,
 			expectedBody: resources.GetEntitlementsResponse{
-				Data:   mockEntitlements.Data,
+				Meta: resources.ResponseMeta{
+					Size: len(mockEntitlements),
+				},
+				Data:   mockEntitlements,
 				Status: http.StatusOK,
 			},
 		},

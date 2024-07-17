@@ -33,14 +33,14 @@ func (h handler) GetEntitlements(w http.ResponseWriter, req *http.Request, param
 	}
 
 	response := resources.GetEntitlementsResponse{
-		Links:  resources.NewResponseLinks[resources.EntityEntitlement](req.URL, entitlements),
-		Meta:   entitlements.Meta,
-		Data:   entitlements.Data,
+		Meta: resources.ResponseMeta{
+			Size: len(entitlements),
+		},
+		Data:   entitlements,
 		Status: http.StatusOK,
 	}
 
 	writeResponse(w, http.StatusOK, response)
-
 }
 
 // GetRawEntitlements returns the list of known entitlements as raw text.
