@@ -46,13 +46,46 @@ func (db *Database) ListAvailableIdentityProviders() []resources.AvailableIdenti
 	return db.AvailableIdentityProviders
 }
 
-// ListUserResources returns the list of resources.
-func (db *Database) ListUserResources() []resources.Resource {
+// ListUserResources returns the list of resources. If entityType is nil, the
+// method returns all resources.
+func (db *Database) ListUserResources(entityType *string) []resources.Resource {
 	db.mutex.RLock()
 	defer db.mutex.RUnlock()
 	db.Load()
 
-	return db.Resources
+	if entityType == nil {
+		return db.Resources
+	}
+
+	// Create a map of resources by flattening the hierarchical data structure.
+	leaves := append([]resources.Resource{}, db.Resources...)
+	m := map[resources.Resource]resources.Resource{}
+	for {
+		parents := []resources.Resource{}
+		for _, l := range leaves {
+			if l.Parent != nil {
+				parents = append(parents, *l.Parent)
+			}
+
+			key := l
+			key.Parent = nil
+			if _, ok := m[key]; !ok {
+				m[key] = l
+			}
+		}
+		if len(parents) == 0 {
+			break
+		}
+		leaves = parents
+	}
+
+	result := []resources.Resource{}
+	for _, resource := range m {
+		if resource.Entity.Type == *entityType {
+			result = append(result, resource)
+		}
+	}
+	return result
 }
 
 // ListCapabilities returns the list of capabilities. Note that, normally,
