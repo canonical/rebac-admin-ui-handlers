@@ -635,57 +635,12 @@ func (siw *ServerInterfaceWrapper) GetEntitlements(w http.ResponseWriter, r *htt
 	// Parameter object where we will unmarshal all parameters from the context
 	var params GetEntitlementsParams
 
-	// ------------- Optional query parameter "size" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "size", r.URL.Query(), &params.Size)
-	if err != nil {
-		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "size", Err: err})
-		return
-	}
-
-	// ------------- Optional query parameter "page" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "page", r.URL.Query(), &params.Page)
-	if err != nil {
-		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "page", Err: err})
-		return
-	}
-
-	// ------------- Optional query parameter "nextToken" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "nextToken", r.URL.Query(), &params.NextToken)
-	if err != nil {
-		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "nextToken", Err: err})
-		return
-	}
-
 	// ------------- Optional query parameter "filter" -------------
 
 	err = runtime.BindQueryParameter("form", true, false, "filter", r.URL.Query(), &params.Filter)
 	if err != nil {
 		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "filter", Err: err})
 		return
-	}
-
-	headers := r.Header
-
-	// ------------- Optional header parameter "Next-Page-Token" -------------
-	if valueList, found := headers[http.CanonicalHeaderKey("Next-Page-Token")]; found {
-		var NextPageToken PaginationNextTokenHeader
-		n := len(valueList)
-		if n != 1 {
-			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Next-Page-Token", Count: n})
-			return
-		}
-
-		err = runtime.BindStyledParameterWithOptions("simple", "Next-Page-Token", valueList[0], &NextPageToken, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false})
-		if err != nil {
-			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Next-Page-Token", Err: err})
-			return
-		}
-
-		params.NextPageToken = &NextPageToken
-
 	}
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
