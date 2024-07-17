@@ -53,10 +53,6 @@ func (db *Database) ListUserResources(entityType *string) []resources.Resource {
 	defer db.mutex.RUnlock()
 	db.Load()
 
-	if entityType == nil {
-		return db.Resources
-	}
-
 	// Create a map of resources by flattening the hierarchical data structure.
 	leaves := append([]resources.Resource{}, db.Resources...)
 	m := map[resources.Resource]resources.Resource{}
@@ -81,7 +77,7 @@ func (db *Database) ListUserResources(entityType *string) []resources.Resource {
 
 	result := []resources.Resource{}
 	for _, resource := range m {
-		if resource.Entity.Type == *entityType {
+		if entityType == nil || resource.Entity.Type == *entityType {
 			result = append(result, resource)
 		}
 	}
