@@ -40,11 +40,10 @@ func TestHandler_Resources_Success(t *testing.T) {
 
 	mockResources := resources.PaginatedResponse[resources.Resource]{
 		Data: []resources.Resource{{
-			Id:   "resource-id",
-			Name: "resource-name",
 			Entity: resources.Entity{
 				Id:   "entity-id",
 				Type: "entity-type",
+				Name: "entity-name",
 			},
 		}},
 	}
