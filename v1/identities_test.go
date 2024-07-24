@@ -32,7 +32,6 @@ import (
 )
 
 var (
-	mockFirstName  = "MockFirstName"
 	mockIdentityId = "test-id"
 )
 
