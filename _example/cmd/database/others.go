@@ -16,6 +16,8 @@
 package database
 
 import (
+	"strings"
+
 	"github.com/canonical/rebac-admin-ui-handlers/v1/resources"
 )
 
@@ -29,7 +31,7 @@ func (db *Database) GetAuthModel() string {
 }
 
 // ListUserEntitlements returns the list of entitlements.
-func (db *Database) ListUserEntitlements() []resources.EntityEntitlement {
+func (db *Database) ListUserEntitlements() []resources.EntitlementSchema {
 	db.mutex.RLock()
 	defer db.mutex.RUnlock()
 	db.Load()
@@ -46,40 +48,23 @@ func (db *Database) ListAvailableIdentityProviders() []resources.AvailableIdenti
 	return db.AvailableIdentityProviders
 }
 
-// ListUserResources returns the list of resources. If entityType is nil, the
-// method returns all resources.
-func (db *Database) ListUserResources(entityType *string) []resources.Resource {
+// ListUserResources returns the list of resources.
+// If `entityType` is nil then resource type filtering (exact match) is not applied.
+// If `entityName` is nil then resource name filtering (prefix match) is not applied.
+func (db *Database) ListUserResources(entityType *string, entityName *string) []resources.Resource {
 	db.mutex.RLock()
 	defer db.mutex.RUnlock()
 	db.Load()
 
-	// Create a map of resources by flattening the hierarchical data structure.
-	leaves := append([]resources.Resource{}, db.Resources...)
-	m := map[resources.Resource]resources.Resource{}
-	for {
-		parents := []resources.Resource{}
-		for _, l := range leaves {
-			if l.Parent != nil {
-				parents = append(parents, *l.Parent)
-			}
-
-			key := l
-			key.Parent = nil
-			if _, ok := m[key]; !ok {
-				m[key] = l
-			}
-		}
-		if len(parents) == 0 {
-			break
-		}
-		leaves = parents
-	}
-
 	result := []resources.Resource{}
-	for _, resource := range m {
-		if entityType == nil || resource.Entity.Type == *entityType {
-			result = append(result, resource)
+	for _, resource := range db.Resources {
+		if entityType != nil && resource.Entity.Type != *entityType {
+			continue
 		}
+		if entityName != nil && !strings.HasPrefix(resource.Entity.Name, *entityName) {
+			continue
+		}
+		result = append(result, resource)
 	}
 	return result
 }

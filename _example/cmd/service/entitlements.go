@@ -32,7 +32,7 @@ type EntitlementsService struct {
 var _ interfaces.EntitlementsService = &EntitlementsService{}
 
 // ListEntitlements returns the list of entitlements in JSON format.
-func (s *EntitlementsService) ListEntitlements(ctx context.Context, params *resources.GetEntitlementsParams) ([]resources.EntityEntitlement, error) {
+func (s *EntitlementsService) ListEntitlements(ctx context.Context, params *resources.GetEntitlementsParams) ([]resources.EntitlementSchema, error) {
 	// For the sake of this example we allow everyone to call this method. If it's not
 	// the case, you can do the following to get the user:
 	//
