@@ -19,7 +19,6 @@
 package v1
 
 import (
-	"errors"
 	"net/http"
 	"strings"
 
@@ -65,10 +64,6 @@ type ReBACAdminBackend struct {
 // NewReBACAdminBackend returns a new ReBACAdminBackend instance, configured
 // with given backends.
 func NewReBACAdminBackend(params ReBACAdminBackendParams) (*ReBACAdminBackend, error) {
-	if params.Authenticator == nil {
-		return nil, errors.New("authenticator cannot be nil")
-	}
-
 	return newReBACAdminBackendWithService(
 		params,
 		newHandlerWithValidation(&handler{
@@ -108,12 +103,15 @@ func newReBACAdminBackendWithService(params ReBACAdminBackendParams, handler res
 
 // Handler returns HTTP handlers implementing the ReBAC Admin OpenAPI spec.
 func (b *ReBACAdminBackend) Handler(baseURL string) http.Handler {
+	var middlewares []resources.MiddlewareFunc
+	if b.params.Authenticator != nil {
+		middlewares = append(middlewares, b.authenticationMiddleware())
+	}
+
 	baseURL, _ = strings.CutSuffix(baseURL, "/")
 	return resources.HandlerWithOptions(b.handler, resources.ChiServerOptions{
-		BaseURL: baseURL + "/v1",
-		Middlewares: []resources.MiddlewareFunc{
-			b.authenticationMiddleware(),
-		},
+		BaseURL:     baseURL + "/v1",
+		Middlewares: middlewares,
 		ErrorHandlerFunc: func(w http.ResponseWriter, _ *http.Request, err error) {
 			writeErrorResponse(w, err)
 		},
