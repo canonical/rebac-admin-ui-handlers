@@ -74,7 +74,7 @@ func TestContextualAuthenticatedIdentity(t *testing.T) {
 			baseRequest, err := http.NewRequest(http.MethodGet, "/blah", nil)
 			c.Assert(err, qt.IsNil)
 
-			req := newRequestWithIdentityInContext(baseRequest, tt.identity)
+			req := baseRequest.WithContext(ContextWithIdentity(baseRequest.Context(), tt.identity))
 			c.Assert(req, qt.IsNotNil)
 
 			fetchedIdentity, err := GetIdentityFromContext(req.Context())

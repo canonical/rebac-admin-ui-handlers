@@ -33,9 +33,7 @@ import (
 func TestHandlerWorksWithStandardMux(t *testing.T) {
 	c := qt.New(t)
 
-	sut, _ := NewReBACAdminBackend(ReBACAdminBackendParams{
-		Authenticator: &noopAuthenticator{},
-	})
+	sut, _ := NewReBACAdminBackend(ReBACAdminBackendParams{})
 	handler := sut.Handler("/some/base/path/")
 
 	mux := http.NewServeMux()
@@ -61,9 +59,7 @@ func TestHandlerWorksWithStandardMux(t *testing.T) {
 func TestHandlerWorksWithChiMux(t *testing.T) {
 	c := qt.New(t)
 
-	sut, _ := NewReBACAdminBackend(ReBACAdminBackendParams{
-		Authenticator: &noopAuthenticator{},
-	})
+	sut, _ := NewReBACAdminBackend(ReBACAdminBackendParams{})
 	handler := sut.Handler("")
 
 	mux := chi.NewMux()

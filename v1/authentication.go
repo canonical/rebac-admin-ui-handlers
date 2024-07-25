@@ -46,7 +46,8 @@ func (b *ReBACAdminBackend) authenticationMiddleware() resources.MiddlewareFunc 
 				writeErrorResponse(w, NewAuthenticationError("nil identity"))
 				return
 			}
-			next.ServeHTTP(w, newRequestWithIdentityInContext(r, identity))
+
+			next.ServeHTTP(w, r.WithContext(ContextWithIdentity(r.Context(), identity)))
 		})
 	}
 }
@@ -66,8 +67,14 @@ func GetIdentityFromContext(ctx context.Context) (any, error) {
 	return identity, nil
 }
 
-// newRequestWithIdentityInContext sets the given authenticated identity in a
-// new request instance context and returns the new request.
-func newRequestWithIdentityInContext(r *http.Request, identity any) *http.Request {
-	return r.WithContext(context.WithValue(r.Context(), authenticatedIdentityContextKey{}, identity))
+// ContextWithIdentity returns a new context from the given one and associates it
+// with the given identity object. The identity can be retrieved by calling the
+// `GetIdentityFromContext` with the context returned by this function.
+//
+// Users of the library should not directly use this method, unless they need to
+// handle the authentication outside of the library, in which case they need to
+// call this function (with the authenticated identity) to get a new context and
+// then pass it (as the HTTP request context) to the next HTTP handler.
+func ContextWithIdentity(ctx context.Context, identity any) context.Context {
+	return context.WithValue(ctx, authenticatedIdentityContextKey{}, identity)
 }

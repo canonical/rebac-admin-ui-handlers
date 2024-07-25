@@ -58,7 +58,7 @@ If you want to keep the new state just call the underlying shell script, `test.s
 
 To use the *ReBAC Admin UI Handler* library you should take care of the following:
 
-1. Implement the `Authenticator` interface.
+1. **(Optional)** Implement the `Authenticator` interface.
 2. Implement `*Service` interfaces that match to your product service's needs.
 3. **(Optional)** Implement the `CapabilitiesService` interface.
 4. **(Optional)** Implement error response mapping.
@@ -66,7 +66,7 @@ To use the *ReBAC Admin UI Handler* library you should take care of the followin
 
 These steps are explained as follows.
 
-### 1. Implementing `Authenticator`
+### 1. Implementing `Authenticator` (optional)
 
 Authentication works by implementing the `Authenticator` interface defined in the `v1/interfaces` package. There's only one method, called `Authenticate` that you need to implement:
 
@@ -101,6 +101,23 @@ return &User{
 ```
 
 This returned value, will be accessible to other implemented methods, via the `v1.GetIdentityFromContext` method. More on this in the next subsection.
+
+#### It's optional
+
+Implementing the `Authenticator` interface is not a required step. Some product services might want to handle authentication via their own middleware. In such cases, it's important to associate the authenticated user with the HTTP request context. For this purpose, there is a method, called `ContextWithIdentity`. As an example, you can call it like this in your authentication middleware:
+
+
+```go
+func MyMiddleware(next http.Handler) http.Handler {
+  return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+    user = &User{
+        name: "john doe",
+    },
+    ctx := v1.ContextWithIdentity(r.Context(), user)
+    next.ServeHTTP(w, r.WithContext(ctx))
+  })
+}
+```
 
 ### 2. Implement `*Service` interfaces
 
