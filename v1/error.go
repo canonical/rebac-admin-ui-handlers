@@ -100,6 +100,15 @@ func NewInvalidRequestError(message string) error {
 	}
 }
 
+// NewNotImplementedError returns an error instance that reports the requested operation is not implemented by the
+// backend.
+func NewNotImplementedError(message string) error {
+	return &errorWithStatus{
+		status:  http.StatusNotImplemented,
+		message: fmt.Sprintf("not implemented: %s", message),
+	}
+}
+
 // NewUnknownError returns an error instance that represents an unknown internal error.
 func NewUnknownError(message string) error {
 	return &errorWithStatus{
