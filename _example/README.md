@@ -179,12 +179,22 @@ func (s *MyIdentitiesService) ListIdentities(ctx context.Context, params *resour
 
 Here, the authenticated `User` struct is taken via the `GetIdentityFromRequest` function. If the user doesn't have the required permissions, we should just return a pre-defined error by using the `NewAuthorizationError` method. Also, if something went wrong (like a database communication failure) you can use the `NewUnknownError` method to return that error.
 
+#### Partial implementation
+
+Note that sometimes a product service will not semantically implement all methods defined on a `*Service` interface. In that case, the interface method(s) should be implemented, but they should use the builtin `NewNotImplementedError` function to create and return an error. For example, if a product service does not support addition of identities, it should implement the `CreateIdentity` method like this:
+
+```go
+// CreateIdentity not-supported here.
+func (s *MyIdentitiesService) CreateIdentity(ctx context.Context, identity *resources.Identity) (*resources.Identity, error) {
+	return nil, v1.NewNotImplementedError("some reason")
+}
+```
 
 ### 3. Implement `CapabilitiesService` (optional)
 
 The `CapabilitiesService` is meant to provide a self-identification mechanism for the API backend. When the client requests `GET /capabilities`, it'll receive a list of endpoints/methods that the backend implements. It helps with a fine-grained identification of the API capabilities. Also, the front-end application can then enable/disable various commands which improves the user experience.
 
-Implementing the `CapabilitiesService` is optional. If you do not provide an implementation, the library will infer your backend capabilities by checking non-nil implementations of the `*Service` interfaces. However, this inference assumes that all interface methods are effectively implemented (i.e., they are not returning deliberate not-implemented errors). If you are not fully implementing an interface, it's best to provide an implementation of the `CapabilitiesService` that reflects this.
+Implementing the `CapabilitiesService` is optional. If you do not provide an implementation, the library will infer your backend capabilities by checking non-nil implementations of the `*Service` interfaces. However, this inference assumes that all interface methods are effectively implemented (i.e., they are not returning deliberate not-implemented errors). If you are not fully implementing an interface, it's best to provide an implementation of the `CapabilitiesService` that reflects this. Note that, when an interface method is not semantically implemented, it should use the builtin `NewNotImplementedError` function to create and return an error.
 
 If you need to implement the `CapabilitiesService`, then there's only one method on this interface, called `ListCapabilities` that you need to implement. All that it needs to do is to return an array of endpoint/methods pairs:
 
