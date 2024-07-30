@@ -32,7 +32,6 @@ import (
 )
 
 var (
-	mockFirstName  = "MockFirstName"
 	mockIdentityId = "test-id"
 )
 
@@ -238,9 +237,9 @@ func TestHandler_Identities_Success(t *testing.T) {
 	mockEntitlements := resources.PaginatedResponse[resources.EntityEntitlement]{
 		Data: []resources.EntityEntitlement{
 			{
-				EntitlementType: "mock-entl-type",
-				EntityName:      "mock-entity-name",
-				EntityType:      "mock-entity-type",
+				Entitlement: "mock-entl",
+				EntityId:    "mock-entity-id",
+				EntityType:  "mock-entity-type",
 			},
 		},
 	}

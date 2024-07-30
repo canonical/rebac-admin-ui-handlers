@@ -21,9 +21,10 @@ import (
 	"github.com/canonical/rebac-admin-ui-handlers/v1/resources"
 )
 
+// EntitlementsService defines an abstract backend to handle entitlement schema related operations.
 type EntitlementsService interface {
 	// ListEntitlements returns the list of entitlements in JSON format.
-	ListEntitlements(ctx context.Context, params *resources.GetEntitlementsParams) ([]resources.EntityEntitlement, error)
+	ListEntitlements(ctx context.Context, params *resources.GetEntitlementsParams) ([]resources.EntitlementSchema, error)
 
 	// RawEntitlements returns the list of entitlements as raw text.
 	RawEntitlements(ctx context.Context) (string, error)

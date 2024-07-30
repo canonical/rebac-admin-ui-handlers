@@ -38,11 +38,11 @@ func TestHandler_Entitlements_Success(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockEntitlements := []resources.EntityEntitlement{
+	mockEntitlements := []resources.EntitlementSchema{
 		{
-			EntitlementType: "mock-entl-type",
-			EntityName:      "",
-			EntityType:      "mock-entity-type",
+			Entitlement:  "mock-entl-type",
+			EntityType:   "mock-entity-type",
+			ReceiverType: "mock-receiver-type",
 		},
 	}
 

@@ -25,7 +25,7 @@ import (
 // EntitlementToString marshals a given entitlement as a string.
 func EntitlementToString(e resources.EntityEntitlement) string {
 	// For example: "can_read::controller:foo"
-	return fmt.Sprintf("%s::%s:%s", e.EntitlementType, e.EntityType, e.EntityName)
+	return fmt.Sprintf("%s::%s:%s", e.Entitlement, e.EntityType, e.EntityId)
 }
 
 // EntitlementFromString unmarshals a entitlement from a given string.
@@ -33,13 +33,13 @@ func EntitlementFromString(s string) resources.EntityEntitlement {
 	parts := strings.SplitN(s, ":", 4)
 	result := resources.EntityEntitlement{}
 	if len(parts) > 0 {
-		result.EntitlementType = parts[0]
+		result.Entitlement = parts[0]
 	}
 	if len(parts) > 1 {
 		result.EntityType = parts[1]
 	}
 	if len(parts) > 2 {
-		result.EntityName = parts[2]
+		result.EntityId = parts[2]
 	}
 	return result
 }

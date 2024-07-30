@@ -43,9 +43,9 @@ func TestHandlerWithValidation_Groups(t *testing.T) {
 	}
 
 	validEntitlement := resources.EntityEntitlement{
-		EntitlementType: "some-entitlement-type",
-		EntityName:      "some-entity-name",
-		EntityType:      "some-entity-type",
+		Entitlement: "some-entitlement",
+		EntityId:    "some-entity-id",
+		EntityType:  "some-entity-type",
 	}
 
 	const (
@@ -192,8 +192,8 @@ func TestHandlerWithValidation_Groups(t *testing.T) {
 	}, {
 		name: "PatchGroupsItemEntitlements: failure; invalid entitlement",
 		expectedPatterns: []string{
-			"'EntitlementType' failed on the 'required' tag",
-			"'EntityName' failed on the 'required' tag",
+			"'Entitlement' failed on the 'required' tag",
+			"'EntityId' failed on the 'required' tag",
 			"'EntityType' failed on the 'required' tag",
 		},
 		requestBody: resources.GroupEntitlementsPatchRequestBody{

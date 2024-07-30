@@ -159,7 +159,7 @@ done
 for n in ${_names[@]}
 do
     echo -n "PATCH group entitlements: group-$n"
-    curl $_opts -X PATCH "$_base/groups/group-$n/entitlements" -d "{\"patches\":[{\"op\":\"add\",\"entitlement\":{\"entitlement_type\":\"entitlement-type-$n\",\"entity_name\":\"entity-$n\",\"entity_type\":\"entity-type-$n\"}}]}"
+    curl $_opts -X PATCH "$_base/groups/group-$n/entitlements" -d "{\"patches\":[{\"op\":\"add\",\"entitlement\":{\"entitlement\":\"entitlement-$n\",\"entity_id\":\"entity-$n\",\"entity_type\":\"entity-type-$n\"}}]}"
     echo -n '  > GET group entitlements: '
     curl $_opts -X GET "$_base/groups/group-$n/entitlements"
 done
@@ -183,7 +183,7 @@ done
 for n in ${_names[@]}
 do
     echo -n "PATCH identity entitlements: $n@host.com"
-    curl $_opts -X PATCH "$_base/identities/$n@host.com/entitlements" -d "{\"patches\":[{\"op\":\"add\",\"entitlement\":{\"entitlement_type\":\"entitlement-type-$n\",\"entity_name\":\"entity-$n\",\"entity_type\":\"entity-type-$n\"}}]}"
+    curl $_opts -X PATCH "$_base/identities/$n@host.com/entitlements" -d "{\"patches\":[{\"op\":\"add\",\"entitlement\":{\"entitlement\":\"entitlement-$n\",\"entity_id\":\"entity-$n\",\"entity_type\":\"entity-type-$n\"}}]}"
     echo -n '  > GET identity entitlements: '
     curl $_opts -X GET "$_base/identities/$n@host.com/entitlements"
 done
@@ -191,7 +191,7 @@ done
 for n in ${_names[@]}
 do
     echo -n "PATCH role entitlements: role-$n"
-    curl $_opts -X PATCH "$_base/roles/role-$n/entitlements" -d "{\"patches\":[{\"op\":\"add\",\"entitlement\":{\"entitlement_type\":\"entitlement-type-$n\",\"entity_name\":\"entity-$n\",\"entity_type\":\"entity-type-$n\"}}]}"
+    curl $_opts -X PATCH "$_base/roles/role-$n/entitlements" -d "{\"patches\":[{\"op\":\"add\",\"entitlement\":{\"entitlement\":\"entitlement-$n\",\"entity_id\":\"entity-$n\",\"entity_type\":\"entity-type-$n\"}}]}"
     echo -n '  > GET role entitlements: '
     curl $_opts -X GET "$_base/roles/role-$n/entitlements"
 done
@@ -201,7 +201,9 @@ done
 echo -n 'GET resources: '
 curl $_opts -X GET "$_base/resources"
 echo -n 'GET resources: '
-curl $_opts -X GET "$_base/resources?entityType=foo"
+curl $_opts -X GET "$_base/resources?entityType=model"
+echo -n 'GET resources: '
+curl $_opts -X GET "$_base/resources?entityType=model&entityName=m"
 echo -n 'GET entitlements: '
 curl $_opts -X GET "$_base/entitlements"
 echo -n 'GET entitlements/raw: '
@@ -242,7 +244,7 @@ done
 for n in ${_names[@]}
 do
     echo -n "PATCH group entitlements: group-$n"
-    curl $_opts -X PATCH "$_base/groups/group-$n/entitlements" -d "{\"patches\":[{\"op\":\"remove\",\"entitlement\":{\"entitlement_type\":\"entitlement-type-$n\",\"entity_name\":\"entity-$n\",\"entity_type\":\"entity-type-$n\"}}]}"
+    curl $_opts -X PATCH "$_base/groups/group-$n/entitlements" -d "{\"patches\":[{\"op\":\"remove\",\"entitlement\":{\"entitlement\":\"entitlement-$n\",\"entity_id\":\"entity-$n\",\"entity_type\":\"entity-type-$n\"}}]}"
     echo -n '  > GET group entitlements: '
     curl $_opts -X GET "$_base/groups/group-$n/entitlements"
 done
@@ -266,7 +268,7 @@ done
 for n in ${_names[@]}
 do
     echo -n "PATCH identity entitlements: $n@host.com"
-    curl $_opts -X PATCH "$_base/identities/$n@host.com/entitlements" -d "{\"patches\":[{\"op\":\"remove\",\"entitlement\":{\"entitlement_type\":\"entitlement-type-$n\",\"entity_name\":\"entity-$n\",\"entity_type\":\"entity-type-$n\"}}]}"
+    curl $_opts -X PATCH "$_base/identities/$n@host.com/entitlements" -d "{\"patches\":[{\"op\":\"remove\",\"entitlement\":{\"entitlement\":\"entitlement-$n\",\"entity_id\":\"entity-$n\",\"entity_type\":\"entity-type-$n\"}}]}"
     echo -n '  > GET identity entitlements: '
     curl $_opts -X GET "$_base/identities/$n@host.com/entitlements"
 done
@@ -274,7 +276,7 @@ done
 for n in ${_names[@]}
 do
     echo -n "PATCH role entitlements: role-$n"
-    curl $_opts -X PATCH "$_base/roles/role-$n/entitlements" -d "{\"patches\":[{\"op\":\"remove\",\"entitlement\":{\"entitlement_type\":\"entitlement-type-$n\",\"entity_name\":\"entity-$n\",\"entity_type\":\"entity-type-$n\"}}]}"
+    curl $_opts -X PATCH "$_base/roles/role-$n/entitlements" -d "{\"patches\":[{\"op\":\"remove\",\"entitlement\":{\"entitlement\":\"entitlement-$n\",\"entity_id\":\"entity-$n\",\"entity_type\":\"entity-type-$n\"}}]}"
     echo -n '  > GET role entitlements: '
     curl $_opts -X GET "$_base/roles/role-$n/entitlements"
 done

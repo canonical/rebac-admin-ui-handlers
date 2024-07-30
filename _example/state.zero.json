@@ -23,24 +23,34 @@
     },
     "Entitlements": [
         {
-            "entitlement_type": "can_foo",
-            "entity_name": "",
-            "entity_type": "entity-alpha"
+            "entitlement": "admin",
+            "entity_type": "controller",
+            "receiver_type": "identity"
         },
         {
-            "entitlement_type": "can_bar",
-            "entity_name": "",
-            "entity_type": "entity-alpha"
+            "entitlement": "writer",
+            "entity_type": "model",
+            "receiver_type": "identity"
         },
         {
-            "entitlement_type": "can_baz",
-            "entity_name": "",
-            "entity_type": "entity-alpha"
+            "entitlement": "admin",
+            "entity_type": "applicationoffer",
+            "receiver_type": "identity"
         },
         {
-            "entitlement_type": "can_foo",
-            "entity_name": "",
-            "entity_type": "entity-beta"
+            "entitlement": "admin",
+            "entity_type": "controller",
+            "receiver_type": "group"
+        },
+        {
+            "entitlement": "writer",
+            "entity_type": "model",
+            "receiver_type": "group"
+        },
+        {
+            "entitlement": "admin",
+            "entity_type": "applicationoffer",
+            "receiver_type": "group"
         }
     ],
     "AvailableIdentityProviders": [
@@ -64,34 +74,57 @@
     "Resources": [
         {
             "entity": {
-                "id": "entity-beta-instance-1",
-                "type": "entity-beta"
-            },
-            "id": "",
-            "name": "entity-beta-instance-1",
-            "parent": {
-                "entity": {
-                    "id": "entity-alpha-instance-1",
-                    "type": "entity-alpha"
-                },
-                "id": "",
-                "name": "entity-alpha-instance-1"
+                "id": "ctrl-0000",
+                "name": "controller-foo",
+                "type": "controller"
             }
         },
         {
             "entity": {
-                "id": "entity-beta-instance-2",
-                "type": "entity-beta"
+                "id": "model-1111",
+                "name": "model-bar",
+                "type": "model"
             },
-            "id": "",
-            "name": "entity-beta-instance-2",
             "parent": {
-                "entity": {
-                    "id": "entity-alpha-instance-2",
-                    "type": "entity-alpha"
-                },
-                "id": "",
-                "name": "entity-alpha-instance-2"
+                "id": "ctrl-0000",
+                "name": "controller-foo",
+                "type": "controller"
+            }
+        },
+        {
+            "entity": {
+                "id": "model-2222",
+                "name": "model-baz",
+                "type": "model"
+            },
+            "parent": {
+                "id": "ctrl-0000",
+                "name": "controller-foo",
+                "type": "controller"
+            }
+        },
+        {
+            "entity": {
+                "id": "offer-3333",
+                "name": "offer-bar",
+                "type": "applicationoffer"
+            },
+            "parent": {
+                "id": "model-1111",
+                "name": "model-bar",
+                "type": "model"
+            }
+        },
+        {
+            "entity": {
+                "id": "offer-4444",
+                "name": "offer-baz",
+                "type": "applicationoffer"
+            },
+            "parent": {
+                "id": "model-2222",
+                "name": "model-baz",
+                "type": "model"
             }
         }
     ],

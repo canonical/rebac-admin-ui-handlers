@@ -1642,6 +1642,14 @@ func (siw *ServerInterfaceWrapper) GetResources(w http.ResponseWriter, r *http.R
 		return
 	}
 
+	// ------------- Optional query parameter "entityName" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "entityName", r.URL.Query(), &params.EntityName)
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "entityName", Err: err})
+		return
+	}
+
 	headers := r.Header
 
 	// ------------- Optional header parameter "Next-Page-Token" -------------
