@@ -17,7 +17,7 @@ package database
 
 import (
 	"fmt"
-	"strings"
+	"regexp"
 
 	"github.com/canonical/rebac-admin-ui-handlers/v1/resources"
 )
@@ -30,7 +30,7 @@ func EntitlementToString(e resources.EntityEntitlement) string {
 
 // EntitlementFromString unmarshals a entitlement from a given string.
 func EntitlementFromString(s string) resources.EntityEntitlement {
-	parts := strings.SplitN(s, ":", 4)
+	parts := regexp.MustCompile(":+").Split(s, 3)
 	result := resources.EntityEntitlement{}
 	if len(parts) > 0 {
 		result.Entitlement = parts[0]
