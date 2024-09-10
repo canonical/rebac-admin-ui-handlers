@@ -64,28 +64,58 @@ type ReBACAdminBackend struct {
 // NewReBACAdminBackend returns a new ReBACAdminBackend instance, configured
 // with given backends.
 func NewReBACAdminBackend(params ReBACAdminBackendParams) (*ReBACAdminBackend, error) {
+	identities := params.Identities
+	if identities == nil {
+		identities = unimplementedIdentitiesService{}
+	}
+
+	entitlements := params.Entitlements
+	if entitlements == nil {
+		entitlements = unimplementedEntitlementsService{}
+	}
+
+	groups := params.Groups
+	if groups == nil {
+		groups = unimplementedGroupsService{}
+	}
+
+	identityProviders := params.IdentityProviders
+	if identityProviders == nil {
+		identityProviders = unimplementedIdentityProvidersService{}
+	}
+
+	resources := params.Resources
+	if resources == nil {
+		resources = unimplementedResourcesService{}
+	}
+
+	roles := params.Roles
+	if roles == nil {
+		roles = unimplementedRolesService{}
+	}
+
 	return newReBACAdminBackendWithService(
 		params,
 		newHandlerWithValidation(&handler{
-			Identities:            params.Identities,
+			Identities:            identities,
 			IdentitiesErrorMapper: params.IdentitiesErrorMapper,
 
-			Roles:            params.Roles,
+			Roles:            roles,
 			RolesErrorMapper: params.RolesErrorMapper,
 
-			IdentityProviders:            params.IdentityProviders,
+			IdentityProviders:            identityProviders,
 			IdentityProvidersErrorMapper: params.IdentityProvidersErrorMapper,
 
 			Capabilities:            params.Capabilities,
 			CapabilitiesErrorMapper: params.CapabilitiesErrorMapper,
 
-			Entitlements:            params.Entitlements,
+			Entitlements:            entitlements,
 			EntitlementsErrorMapper: params.EntitlementsErrorMapper,
 
-			Groups:            params.Groups,
+			Groups:            groups,
 			GroupsErrorMapper: params.GroupsErrorMapper,
 
-			Resources:            params.Resources,
+			Resources:            resources,
 			ResourcesErrorMapper: params.ResourcesErrorMapper,
 		})), nil
 }
