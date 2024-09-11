@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.1](https://github.com/canonical/rebac-admin-ui-handlers/compare/v0.1.0...v0.1.1) (2024-09-11)
+
+
+### Bug Fixes
+
+* add `handlerDispatcher` to gate endpoint invocation ([f0b1f73](https://github.com/canonical/rebac-admin-ui-handlers/commit/f0b1f7311df9697f35966bdc6a086eba6a196029))
+* correctly parse entitlements ([153640f](https://github.com/canonical/rebac-admin-ui-handlers/commit/153640f6dd5ecafa7ed0c20f3fc3927fad14f42e))
+
 ## [0.1.0](https://github.com/canonical/rebac-admin-ui-handlers/compare/v0.0.1...v0.1.0) (2024-07-30)
 
 
