@@ -29,7 +29,6 @@ import (
 // ReBACAdminBackendParams contains references to user-defined implementation
 // of required abstractions, called "backend"s.
 type ReBACAdminBackendParams struct {
-	// Authenticator is required.
 	Authenticator            interfaces.Authenticator
 	AuthenticatorErrorMapper ErrorResponseMapper
 
@@ -64,30 +63,47 @@ type ReBACAdminBackend struct {
 // NewReBACAdminBackend returns a new ReBACAdminBackend instance, configured
 // with given backends.
 func NewReBACAdminBackend(params ReBACAdminBackendParams) (*ReBACAdminBackend, error) {
-	return newReBACAdminBackendWithService(
-		params,
-		newHandlerWithValidation(&handler{
-			Identities:            params.Identities,
-			IdentitiesErrorMapper: params.IdentitiesErrorMapper,
+	// Handlers wrapping one another in this order:
+	//   Dispatcher(Validator(Core))
+	//
+	// Here:
+	// - Dispatcher: determines the availability of the requested HTTP endpoint.
+	// - Validator:  validates the request body/parameters.
+	// - Core:       delegates the control to the service interface implementation.
 
-			Roles:            params.Roles,
-			RolesErrorMapper: params.RolesErrorMapper,
+	core := &handler{
+		Identities:            params.Identities,
+		IdentitiesErrorMapper: params.IdentitiesErrorMapper,
 
-			IdentityProviders:            params.IdentityProviders,
-			IdentityProvidersErrorMapper: params.IdentityProvidersErrorMapper,
+		Roles:            params.Roles,
+		RolesErrorMapper: params.RolesErrorMapper,
 
-			Capabilities:            params.Capabilities,
-			CapabilitiesErrorMapper: params.CapabilitiesErrorMapper,
+		IdentityProviders:            params.IdentityProviders,
+		IdentityProvidersErrorMapper: params.IdentityProvidersErrorMapper,
 
-			Entitlements:            params.Entitlements,
-			EntitlementsErrorMapper: params.EntitlementsErrorMapper,
+		Capabilities:            params.Capabilities,
+		CapabilitiesErrorMapper: params.CapabilitiesErrorMapper,
 
-			Groups:            params.Groups,
-			GroupsErrorMapper: params.GroupsErrorMapper,
+		Entitlements:            params.Entitlements,
+		EntitlementsErrorMapper: params.EntitlementsErrorMapper,
 
-			Resources:            params.Resources,
-			ResourcesErrorMapper: params.ResourcesErrorMapper,
-		})), nil
+		Groups:            params.Groups,
+		GroupsErrorMapper: params.GroupsErrorMapper,
+
+		Resources:            params.Resources,
+		ResourcesErrorMapper: params.ResourcesErrorMapper,
+	}
+	validator := newHandlerWithValidation(core)
+	dispatcher := newHandlerDispatcher(validator, handlerDispatcherParams{
+		ImplementsIdentities:        params.Identities != nil,
+		ImplementsRoles:             params.Roles != nil,
+		ImplementsIdentityProviders: params.IdentityProviders != nil,
+		ImplementsEntitlements:      params.Entitlements != nil,
+		ImplementsGroups:            params.Groups != nil,
+		ImplementsResources:         params.Resources != nil,
+	})
+
+	return newReBACAdminBackendWithService(params, dispatcher), nil
 }
 
 // newReBACAdminBackendWithService returns a new ReBACAdminBackend instance, configured
