@@ -45,15 +45,15 @@ func newHandlerDispatcher(handler resources.ServerInterface, params handlerDispa
 	}
 }
 
-// GetCapabilities delegates the call to the wrapped handler's `GetCapabilities` method, if it is allowed; otherwise returns a `501 Unimplemented` status code.
+// GetCapabilities delegates the call to the wrapped handler's `GetCapabilities` method.
 func (h handlerDispatcher) GetCapabilities(w http.ResponseWriter, r *http.Request) {
 	// This endpoint should always work, regardless of any user implementations provided.
 	h.ServerInterface.GetCapabilities(w, r)
 }
 
-// SwaggerJson delegates the call to the wrapped handler's `SwaggerJson` method, if it is allowed; otherwise returns a `501 Unimplemented` status code.
+// SwaggerJson delegates the call to the wrapped handler's `SwaggerJson` method.
 func (h handlerDispatcher) SwaggerJson(w http.ResponseWriter, r *http.Request) {
-	// This endpoint is not handled by the user implementation.
+	// This endpoint is not handled by the user implementation, so it's always available.
 	h.ServerInterface.SwaggerJson(w, r)
 }
 
