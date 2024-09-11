@@ -29,7 +29,6 @@ import (
 // ReBACAdminBackendParams contains references to user-defined implementation
 // of required abstractions, called "backend"s.
 type ReBACAdminBackendParams struct {
-	// Authenticator is required.
 	Authenticator            interfaces.Authenticator
 	AuthenticatorErrorMapper ErrorResponseMapper
 
