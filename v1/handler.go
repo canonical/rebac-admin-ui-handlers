@@ -19,6 +19,8 @@ import (
 	"github.com/canonical/rebac-admin-ui-handlers/v1/interfaces"
 )
 
+// handler is the innermost handler that calls the methods defined on the
+// `*Service` interfaces.
 type handler struct {
 	Identities            interfaces.IdentitiesService
 	IdentitiesErrorMapper ErrorResponseMapper
