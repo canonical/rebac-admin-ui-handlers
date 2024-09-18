@@ -63,7 +63,7 @@ func main() {
 	// NOTE: When using Chi, you should omit the base URL for the latter; like
 	// this:
 	//   mux := chi.NewMux()
-	//   mux.Handle("/rebac/", rebac.Handler(""))
+	//   mux.Mount("/rebac/", rebac.Handler(""))
 
 	// These endpoints are just for the sake of this in-memory server. So, you
 	// don't need to implement them in your project.
