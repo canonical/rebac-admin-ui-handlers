@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.2](https://github.com/canonical/rebac-admin-ui-handlers/compare/v0.1.1...v0.1.2) (2024-09-24)
+
+
+### Bug Fixes
+
+* add `isAuthenticationRequired` function ([b6a7265](https://github.com/canonical/rebac-admin-ui-handlers/commit/b6a72651ab562d0b5bda558ffc7955122e52cbcc))
+* ignore authentication for certain endpoints ([2ffc4bb](https://github.com/canonical/rebac-admin-ui-handlers/commit/2ffc4bbe238b6d0010eba7da0ff07e2f9f98fa41))
+
 ## [0.1.1](https://github.com/canonical/rebac-admin-ui-handlers/compare/v0.1.0...v0.1.1) (2024-09-11)
 
 
