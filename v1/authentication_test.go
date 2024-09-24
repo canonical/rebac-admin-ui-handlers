@@ -18,6 +18,7 @@ package v1
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -198,7 +199,7 @@ func TestContextualAuthenticatedIdentity_MiddlewareAndContext(t *testing.T) {
 			})
 
 			recorder := httptest.NewRecorder()
-			sut.authenticationMiddleware()(next).ServeHTTP(recorder, req)
+			sut.authenticationMiddleware("")(next).ServeHTTP(recorder, req)
 
 			c.Assert(recorder.Code, qt.Equals, tt.expectedStatusCode)
 
@@ -210,6 +211,53 @@ func TestContextualAuthenticatedIdentity_MiddlewareAndContext(t *testing.T) {
 			c.Assert(err, qt.IsNil)
 			c.Assert(parsedResponse.Status, qt.Equals, tt.expectedStatusCode)
 			c.Assert(parsedResponse.Message, qt.Matches, tt.expectedMessage)
+		})
+	}
+}
+
+func TestAuthenticationIgnoresCertainEndpoints(t *testing.T) {
+	c := qt.New(t)
+
+	// Slice of endpoints that should not require authentication.
+	endpoints := []struct {
+		method string
+		path   string
+	}{
+		{
+			method: "GET",
+			path:   "/swagger.json",
+		},
+	}
+
+	for _, tt := range endpoints {
+		c.Run(fmt.Sprintf("%s %s", tt.method, tt.path), func(c *qt.C) {
+			ctrl := gomock.NewController(c)
+			defer ctrl.Finish()
+
+			// A mock authenticator that always returns an authentication failure error,
+			// but it expects no calls. So, the test will fail if the mock struct method(s)
+			// get called.
+			authenticator := interfaces.NewMockAuthenticator(ctrl)
+
+			sut, err := NewReBACAdminBackend(ReBACAdminBackendParams{
+				Authenticator: authenticator,
+			})
+			c.Assert(err, qt.IsNil)
+
+			req, err := http.NewRequest(tt.method, tt.path, nil)
+			c.Assert(err, qt.IsNil)
+
+			var nextHandlerCalled bool
+			next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				nextHandlerCalled = true
+				w.WriteHeader(http.StatusOK)
+			})
+
+			recorder := httptest.NewRecorder()
+			sut.authenticationMiddleware("")(next).ServeHTTP(recorder, req)
+
+			c.Assert(recorder.Code, qt.Equals, http.StatusOK)
+			c.Assert(nextHandlerCalled, qt.IsTrue)
 		})
 	}
 }

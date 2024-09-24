@@ -23,6 +23,9 @@ import (
 
 	qt "github.com/frankban/quicktest"
 	"github.com/go-chi/chi/v5"
+	"go.uber.org/mock/gomock"
+
+	"github.com/canonical/rebac-admin-ui-handlers/v1/interfaces"
 )
 
 //go:generate mockgen -package interfaces -destination ./interfaces/mock_authentication.go -source=./interfaces/authentication.go
@@ -71,6 +74,40 @@ func TestHandlerWorksWithChiMux(t *testing.T) {
 	println(server.URL)
 
 	res, err := http.Get(server.URL + "/some/base/path/v1/swagger.json")
+	c.Assert(err, qt.IsNil)
+	c.Assert(res.StatusCode, qt.Equals, http.StatusOK)
+	defer res.Body.Close()
+
+	out, err := io.ReadAll(res.Body)
+	c.Assert(err, qt.IsNil)
+	c.Assert(len(out) > 0, qt.IsTrue)
+}
+
+// TestSwaggerJsonIgnoresAuthentication asserts that the `/swagger.json` endpoint
+// always respond with status code 200, without consulting with any authentication
+// middleware.
+func TestSwaggerJsonIgnoresAuthentication(t *testing.T) {
+	c := qt.New(t)
+	ctrl := gomock.NewController(c)
+	defer ctrl.Finish()
+
+	// A mock authenticator that always returns an authentication failure error,
+	// but it expects no calls. So, the test will fail if the mock struct method(s)
+	// get called.
+	authenticator := interfaces.NewMockAuthenticator(ctrl)
+
+	sut, _ := NewReBACAdminBackend(ReBACAdminBackendParams{
+		Authenticator: authenticator,
+	})
+	handler := sut.Handler("/base/")
+
+	mux := http.NewServeMux()
+	mux.Handle("/base/", handler)
+
+	server := httptest.NewServer(mux)
+	defer server.Close()
+
+	res, err := http.Get(server.URL + "/base/v1/swagger.json")
 	c.Assert(err, qt.IsNil)
 	c.Assert(res.StatusCode, qt.Equals, http.StatusOK)
 	defer res.Body.Close()
