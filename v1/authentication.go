@@ -52,6 +52,8 @@ func (b *ReBACAdminBackend) authenticationMiddleware() resources.MiddlewareFunc 
 	}
 }
 
+// authenticatedIdentityContextKey is the type-safe context key to be used to
+// store the identity of the request caller.
 type authenticatedIdentityContextKey struct{}
 
 // GetIdentityFromContext fetches authenticated identity of the caller from the
