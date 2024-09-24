@@ -18,6 +18,7 @@ package v1
 import (
 	"context"
 	"net/http"
+	"strings"
 
 	"github.com/canonical/rebac-admin-ui-handlers/v1/resources"
 )
@@ -26,7 +27,7 @@ import (
 // extraction of the caller identity to the provided authenticator backend, and
 // store the returned identity in the request context.
 // If no authenticator backend is provided, a no-op middleware is returned.
-func (b *ReBACAdminBackend) authenticationMiddleware() resources.MiddlewareFunc {
+func (b *ReBACAdminBackend) authenticationMiddleware(baseURL string) resources.MiddlewareFunc {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if b.params.Authenticator == nil {
@@ -34,6 +35,12 @@ func (b *ReBACAdminBackend) authenticationMiddleware() resources.MiddlewareFunc 
 				// allow nil for authenticator. But it's possible to miss this requirement
 				// in manually created instances (like in tests), we should do the checking.
 				writeErrorResponse(w, NewUnknownError("missing authenticator"))
+				return
+			}
+
+			relativePath, _ := strings.CutPrefix(r.URL.Path, baseURL)
+			if !isAuthenticationRequired(relativePath) {
+				next.ServeHTTP(w, r)
 				return
 			}
 
@@ -52,6 +59,8 @@ func (b *ReBACAdminBackend) authenticationMiddleware() resources.MiddlewareFunc 
 	}
 }
 
+// authenticatedIdentityContextKey is the type-safe context key to be used to
+// store the identity of the request caller.
 type authenticatedIdentityContextKey struct{}
 
 // GetIdentityFromContext fetches authenticated identity of the caller from the
@@ -77,4 +86,14 @@ func GetIdentityFromContext(ctx context.Context) (any, error) {
 // then pass it (as the HTTP request context) to the next HTTP handler.
 func ContextWithIdentity(ctx context.Context, identity any) context.Context {
 	return context.WithValue(ctx, authenticatedIdentityContextKey{}, identity)
+}
+
+// isAuthenticationRequired checks if the given request (identified by the URL)
+// should be authenticated.
+func isAuthenticationRequired(relativePath string) bool {
+	relativePath, _ = strings.CutSuffix(relativePath, "/")
+
+	// For now, the only endpoint that does not require authentication is
+	// `/swagger.json`. So, we can just return with a string comparison.
+	return relativePath != "/swagger.json"
 }
