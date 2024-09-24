@@ -18,6 +18,7 @@ package v1
 import (
 	"context"
 	"net/http"
+	"strings"
 
 	"github.com/canonical/rebac-admin-ui-handlers/v1/resources"
 )
@@ -79,4 +80,14 @@ func GetIdentityFromContext(ctx context.Context) (any, error) {
 // then pass it (as the HTTP request context) to the next HTTP handler.
 func ContextWithIdentity(ctx context.Context, identity any) context.Context {
 	return context.WithValue(ctx, authenticatedIdentityContextKey{}, identity)
+}
+
+// isAuthenticationRequired checks if the given request (identified by the URL)
+// should be authenticated.
+func isAuthenticationRequired(relativePath string) bool {
+	relativePath, _ = strings.CutSuffix(relativePath, "/")
+
+	// For now, the only endpoint that does not require authentication is
+	// `/swagger.json`. So, we can just return with a string comparison.
+	return relativePath != "/swagger.json"
 }
