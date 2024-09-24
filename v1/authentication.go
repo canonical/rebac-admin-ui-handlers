@@ -27,7 +27,7 @@ import (
 // extraction of the caller identity to the provided authenticator backend, and
 // store the returned identity in the request context.
 // If no authenticator backend is provided, a no-op middleware is returned.
-func (b *ReBACAdminBackend) authenticationMiddleware() resources.MiddlewareFunc {
+func (b *ReBACAdminBackend) authenticationMiddleware(baseURL string) resources.MiddlewareFunc {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if b.params.Authenticator == nil {
@@ -35,6 +35,12 @@ func (b *ReBACAdminBackend) authenticationMiddleware() resources.MiddlewareFunc 
 				// allow nil for authenticator. But it's possible to miss this requirement
 				// in manually created instances (like in tests), we should do the checking.
 				writeErrorResponse(w, NewUnknownError("missing authenticator"))
+				return
+			}
+
+			relativePath, _ := strings.CutPrefix(r.URL.Path, baseURL)
+			if !isAuthenticationRequired(relativePath) {
+				next.ServeHTTP(w, r)
 				return
 			}
 

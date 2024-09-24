@@ -119,14 +119,16 @@ func newReBACAdminBackendWithService(params ReBACAdminBackendParams, handler res
 
 // Handler returns HTTP handlers implementing the ReBAC Admin OpenAPI spec.
 func (b *ReBACAdminBackend) Handler(baseURL string) http.Handler {
+	baseURL, _ = strings.CutSuffix(baseURL, "/")
+	baseURL = baseURL + "/v1"
+
 	var middlewares []resources.MiddlewareFunc
 	if b.params.Authenticator != nil {
-		middlewares = append(middlewares, b.authenticationMiddleware())
+		middlewares = append(middlewares, b.authenticationMiddleware(baseURL))
 	}
 
-	baseURL, _ = strings.CutSuffix(baseURL, "/")
 	return resources.HandlerWithOptions(b.handler, resources.ChiServerOptions{
-		BaseURL:     baseURL + "/v1",
+		BaseURL:     baseURL,
 		Middlewares: middlewares,
 		ErrorHandlerFunc: func(w http.ResponseWriter, _ *http.Request, err error) {
 			writeErrorResponse(w, err)
