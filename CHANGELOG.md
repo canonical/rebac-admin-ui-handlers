@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.0](https://github.com/canonical/rebac-admin-ui-handlers/compare/v0.1.2...v0.2.0) (2025-09-05)
+
+
+### Features
+
+* **error-response-mapper:** update MapError to use the context ([1fe817e](https://github.com/canonical/rebac-admin-ui-handlers/commit/1fe817ed2104b126e167ab6a91755310525ece33))
+
+
+### Bug Fixes
+
+* **test:** use latest version of upload-artifact ([b55d122](https://github.com/canonical/rebac-admin-ui-handlers/commit/b55d122322e1700649fe1f120f49aa329e2a0117))
+
 ## [0.1.2](https://github.com/canonical/rebac-admin-ui-handlers/compare/v0.1.1...v0.1.2) (2024-09-24)
 
 
