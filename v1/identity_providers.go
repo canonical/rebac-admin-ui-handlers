@@ -28,7 +28,7 @@ func (h handler) GetAvailableIdentityProviders(w http.ResponseWriter, req *http.
 
 	identityProviders, err := h.IdentityProviders.ListAvailableIdentityProviders(ctx, &params)
 	if err != nil {
-		writeServiceErrorResponse(w, h.IdentityProvidersErrorMapper, err)
+		writeServiceErrorResponse(ctx, w, h.IdentityProvidersErrorMapper, err)
 		return
 	}
 
@@ -50,7 +50,7 @@ func (h handler) GetIdentityProviders(w http.ResponseWriter, req *http.Request, 
 
 	identityProviders, err := h.IdentityProviders.ListIdentityProviders(ctx, &params)
 	if err != nil {
-		writeServiceErrorResponse(w, h.IdentityProvidersErrorMapper, err)
+		writeServiceErrorResponse(ctx, w, h.IdentityProvidersErrorMapper, err)
 		return
 	}
 
@@ -84,7 +84,7 @@ func (h handler) PostIdentityProviders(w http.ResponseWriter, req *http.Request)
 
 	result, err := h.IdentityProviders.RegisterConfiguration(ctx, identityProvider)
 	if err != nil {
-		writeServiceErrorResponse(w, h.IdentityProvidersErrorMapper, err)
+		writeServiceErrorResponse(ctx, w, h.IdentityProvidersErrorMapper, err)
 		return
 	}
 
@@ -98,7 +98,7 @@ func (h handler) DeleteIdentityProvidersItem(w http.ResponseWriter, req *http.Re
 
 	_, err := h.IdentityProviders.DeleteConfiguration(ctx, id)
 	if err != nil {
-		writeServiceErrorResponse(w, h.IdentityProvidersErrorMapper, err)
+		writeServiceErrorResponse(ctx, w, h.IdentityProvidersErrorMapper, err)
 		return
 	}
 
@@ -112,7 +112,7 @@ func (h handler) GetIdentityProvidersItem(w http.ResponseWriter, req *http.Reque
 
 	identityProvider, err := h.IdentityProviders.GetConfiguration(ctx, id)
 	if err != nil {
-		writeServiceErrorResponse(w, h.IdentityProvidersErrorMapper, err)
+		writeServiceErrorResponse(ctx, w, h.IdentityProvidersErrorMapper, err)
 		return
 	}
 
@@ -138,7 +138,7 @@ func (h handler) PutIdentityProvidersItem(w http.ResponseWriter, req *http.Reque
 
 	result, err := h.IdentityProviders.UpdateConfiguration(ctx, identityProvider)
 	if err != nil {
-		writeServiceErrorResponse(w, h.IdentityProvidersErrorMapper, err)
+		writeServiceErrorResponse(ctx, w, h.IdentityProvidersErrorMapper, err)
 		return
 	}
 

@@ -282,7 +282,7 @@ func TestHandler_IdP_ServiceBackendFailures(t *testing.T) {
 		tt := test
 		c.Run(tt.name, func(c *qt.C) {
 			mockErrorResponseMapper := NewMockErrorResponseMapper(ctrl)
-			mockErrorResponseMapper.EXPECT().MapError(gomock.Any()).Return(&mockErrorResponse)
+			mockErrorResponseMapper.EXPECT().MapError(gomock.Any(), gomock.Any()).Return(&mockErrorResponse)
 
 			mockIDPService := interfaces.NewMockIdentityProvidersService(ctrl)
 			tt.setupServiceMock(mockIDPService)

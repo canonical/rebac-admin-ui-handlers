@@ -142,7 +142,7 @@ func TestHandler_Resources_ServiceBackendFailures(t *testing.T) {
 		tt := test
 		c.Run(tt.name, func(c *qt.C) {
 			mockErrorResponseMapper := NewMockErrorResponseMapper(ctrl)
-			mockErrorResponseMapper.EXPECT().MapError(gomock.Any()).Return(&mockErrorResponse)
+			mockErrorResponseMapper.EXPECT().MapError(gomock.Any(), gomock.Any()).Return(&mockErrorResponse)
 
 			mockResourcesService := interfaces.NewMockResourcesService(ctrl)
 			tt.setupServiceMock(mockResourcesService)

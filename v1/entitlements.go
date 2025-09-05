@@ -28,7 +28,7 @@ func (h handler) GetEntitlements(w http.ResponseWriter, req *http.Request, param
 
 	entitlements, err := h.Entitlements.ListEntitlements(ctx, &params)
 	if err != nil {
-		writeServiceErrorResponse(w, h.EntitlementsErrorMapper, err)
+		writeServiceErrorResponse(ctx, w, h.EntitlementsErrorMapper, err)
 		return
 	}
 
@@ -50,7 +50,7 @@ func (h handler) GetRawEntitlements(w http.ResponseWriter, req *http.Request) {
 
 	entitlementsRawString, err := h.Entitlements.RawEntitlements(ctx)
 	if err != nil {
-		writeServiceErrorResponse(w, h.EntitlementsErrorMapper, err)
+		writeServiceErrorResponse(ctx, w, h.EntitlementsErrorMapper, err)
 		return
 	}
 

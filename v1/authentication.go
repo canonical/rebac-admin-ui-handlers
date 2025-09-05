@@ -46,7 +46,7 @@ func (b *ReBACAdminBackend) authenticationMiddleware(baseURL string) resources.M
 
 			identity, err := b.params.Authenticator.Authenticate(r)
 			if err != nil {
-				writeServiceErrorResponse(w, b.params.AuthenticatorErrorMapper, err)
+				writeServiceErrorResponse(r.Context(), w, b.params.AuthenticatorErrorMapper, err)
 				return
 			}
 			if identity == nil {

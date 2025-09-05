@@ -28,7 +28,7 @@ func (h handler) GetResources(w http.ResponseWriter, req *http.Request, params r
 
 	res, err := h.Resources.ListResources(ctx, &params)
 	if err != nil {
-		writeServiceErrorResponse(w, h.ResourcesErrorMapper, err)
+		writeServiceErrorResponse(ctx, w, h.ResourcesErrorMapper, err)
 		return
 	}
 

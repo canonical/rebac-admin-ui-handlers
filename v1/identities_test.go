@@ -192,7 +192,7 @@ func TestHandler_Identities_ServiceBackendFailures(t *testing.T) {
 		tt := test
 		c.Run(tt.name, func(c *qt.C) {
 			mockErrorResponseMapper := NewMockErrorResponseMapper(ctrl)
-			mockErrorResponseMapper.EXPECT().MapError(gomock.Any()).Return(&mockErrorResponse)
+			mockErrorResponseMapper.EXPECT().MapError(gomock.Any(), gomock.Any()).Return(&mockErrorResponse)
 
 			mockIdentityService := interfaces.NewMockIdentitiesService(ctrl)
 			tt.setupServiceMock(mockIdentityService)

@@ -16,6 +16,7 @@
 package v1
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -111,7 +112,7 @@ func TestContextualAuthenticatedIdentity_MiddlewareAndContext(t *testing.T) {
 		name               string
 		setupRequest       func() *http.Request
 		authenticatorFunc  func(r *http.Request) (any, error)
-		mapErrorFunc       func(error) *resources.Response
+		mapErrorFunc       func(context.Context, error) *resources.Response
 		nextHandler        func(c *qt.C, w http.ResponseWriter, r *http.Request)
 		expectedStatusCode int
 		expectedMessage    string
@@ -144,7 +145,7 @@ func TestContextualAuthenticatedIdentity_MiddlewareAndContext(t *testing.T) {
 		authenticatorFunc: func(r *http.Request) (any, error) {
 			return nil, errors.New("some error")
 		},
-		mapErrorFunc: func(err error) *resources.Response {
+		mapErrorFunc: func(ctx context.Context, err error) *resources.Response {
 			return &resources.Response{
 				Status:  999, // Some bizarre code
 				Message: "mapped error message",
@@ -184,7 +185,7 @@ func TestContextualAuthenticatedIdentity_MiddlewareAndContext(t *testing.T) {
 			var mockErrorMapper ErrorResponseMapper
 			if tt.mapErrorFunc != nil {
 				mapper := NewMockErrorResponseMapper(ctrl)
-				mapper.EXPECT().MapError(gomock.Any()).DoAndReturn(tt.mapErrorFunc)
+				mapper.EXPECT().MapError(gomock.Any(), gomock.Any()).DoAndReturn(tt.mapErrorFunc)
 				mockErrorMapper = mapper
 			}
 
