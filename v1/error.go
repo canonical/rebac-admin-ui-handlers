@@ -16,6 +16,7 @@
 package v1
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
@@ -121,7 +122,7 @@ func NewUnknownError(message string) error {
 type ErrorResponseMapper interface {
 	// MapError maps an error into a Response. If the method is unable to map the
 	// error (e.g., the error is unknown), it must return nil.
-	MapError(error) *resources.Response
+	MapError(context.Context, error) *resources.Response
 }
 
 // mapHandlerBadRequestError checks if the given error is an "Bad Request" error

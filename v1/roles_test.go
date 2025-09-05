@@ -330,7 +330,7 @@ func TestHandler_Roles_ServiceBackendFailures(t *testing.T) {
 		tt := test
 		c.Run(tt.name, func(c *qt.C) {
 			mockErrorResponseMapper := NewMockErrorResponseMapper(ctrl)
-			mockErrorResponseMapper.EXPECT().MapError(gomock.Any()).Return(&mockErrorResponse)
+			mockErrorResponseMapper.EXPECT().MapError(gomock.Any(), gomock.Any()).Return(&mockErrorResponse)
 
 			mockRoleService := interfaces.NewMockRolesService(ctrl)
 			tt.setupServiceMock(mockRoleService)

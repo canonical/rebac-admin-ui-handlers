@@ -16,6 +16,7 @@
 package v1
 
 import (
+	"context"
 	"errors"
 	"net/http"
 	"testing"
@@ -25,6 +26,8 @@ import (
 
 	"github.com/canonical/rebac-admin-ui-handlers/v1/resources"
 )
+
+type testCtxKey struct{}
 
 func TestMapErrorResponse(t *testing.T) {
 	c := qt.New(t)
@@ -141,6 +144,7 @@ func TestMapServiceErrorResponse(t *testing.T) {
 		name       string
 		initMapper func() ErrorResponseMapper
 		err        error
+		ctx        context.Context
 		expected   resources.Response
 	}{{
 		name: "nil mapper",
@@ -149,12 +153,13 @@ func TestMapServiceErrorResponse(t *testing.T) {
 			Status:  http.StatusInternalServerError,
 			Message: "Internal Server Error: foo",
 		},
+		ctx: context.Background(),
 	}, {
 		name: "non-nil mapper",
 		initMapper: func() ErrorResponseMapper {
 			mapper := NewMockErrorResponseMapper(ctrl)
 			mapper.EXPECT().
-				MapError(gomock.Any()).
+				MapError(gomock.Any(), gomock.Any()).
 				Return(&resources.Response{
 					Status:  999, // Some bizarre status code
 					Message: "foo",
@@ -166,6 +171,28 @@ func TestMapServiceErrorResponse(t *testing.T) {
 			Status:  999,
 			Message: "foo",
 		},
+		ctx: context.Background(),
+	}, {
+		name: "non-nil mapper using context",
+		initMapper: func() ErrorResponseMapper {
+			mapper := NewMockErrorResponseMapper(ctrl)
+			mapper.EXPECT().
+				MapError(gomock.Any(), gomock.Any()).
+				DoAndReturn(func(ctx context.Context, err error) *resources.Response {
+					userID := ctx.Value(testCtxKey{}).(string)
+					return &resources.Response{
+						Status:  http.StatusTeapot, // Why not?
+						Message: "userID: " + userID,
+					}
+				})
+			return mapper
+		},
+		err: errors.New("baz"),
+		expected: resources.Response{
+			Status:  http.StatusTeapot,
+			Message: "userID: 42",
+		},
+		ctx: context.WithValue(context.Background(), testCtxKey{}, "42"),
 	},
 	}
 
@@ -177,7 +204,7 @@ func TestMapServiceErrorResponse(t *testing.T) {
 				mapper = tt.initMapper()
 			}
 
-			response := mapServiceErrorResponse(mapper, tt.err)
+			response := mapServiceErrorResponse(t.ctx, mapper, tt.err)
 			c.Assert(*response, qt.DeepEquals, tt.expected)
 		})
 	}

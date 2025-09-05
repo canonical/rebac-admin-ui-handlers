@@ -16,6 +16,7 @@
 package v1
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 
@@ -90,10 +91,10 @@ func writeResponse(w http.ResponseWriter, status int, responseObject interface{}
 // mapping strategy.
 //
 // This method should never return nil response.
-func mapServiceErrorResponse(mapper ErrorResponseMapper, err error) *resources.Response {
+func mapServiceErrorResponse(ctx context.Context, mapper ErrorResponseMapper, err error) *resources.Response {
 	var response *resources.Response
 	if mapper != nil {
-		response = mapper.MapError(err)
+		response = mapper.MapError(ctx, err)
 	}
 
 	if response == nil {
@@ -104,8 +105,8 @@ func mapServiceErrorResponse(mapper ErrorResponseMapper, err error) *resources.R
 
 // writeServiceErrorResponse is a helper method that maps errors thrown by
 // services and writes them to the HTTP response stream.
-func writeServiceErrorResponse(w http.ResponseWriter, mapper ErrorResponseMapper, err error) {
-	response := mapServiceErrorResponse(mapper, err)
+func writeServiceErrorResponse(ctx context.Context, w http.ResponseWriter, mapper ErrorResponseMapper, err error) {
+	response := mapServiceErrorResponse(ctx, mapper, err)
 	writeResponse(w, response.Status, response)
 }
 

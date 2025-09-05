@@ -160,7 +160,7 @@ func TestHandler_Capabilities_GetCapabilitiesFailure(t *testing.T) {
 	mockError := errors.New("test-error")
 
 	mockCapabilitiesService.EXPECT().ListCapabilities(gomock.Any()).Return(nil, mockError)
-	mockErrorResponseMapper.EXPECT().MapError(gomock.Eq(mockError)).Return(&mockErrorResponse)
+	mockErrorResponseMapper.EXPECT().MapError(gomock.Any(), gomock.Eq(mockError)).Return(&mockErrorResponse)
 
 	sut := handler{
 		Capabilities:            mockCapabilitiesService,
