@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/canonical/rebac-admin-ui-handlers/compare/v0.2.0...v0.2.1) (2026-01-09)
+
+
+### Bug Fixes
+
+* **govulncheck:** fix GO-2025-3533 ([be99847](https://github.com/canonical/rebac-admin-ui-handlers/commit/be998473541dee38b11eae31b13b2db10bb5c648))
+
 ## [0.2.0](https://github.com/canonical/rebac-admin-ui-handlers/compare/v0.1.2...v0.2.0) (2025-09-05)
 
 
